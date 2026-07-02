@@ -1,0 +1,10 @@
+{
+  "name": "rpw-estimate-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Raleigh Power Wash instant estimate tool, with a Vercel serverless function that emails submissions via Resend.",
+  "dependencies": {
+    "resend": "^4.0.1",
+    "@vercel/kv": "^3.0.0"
+  }
+}
