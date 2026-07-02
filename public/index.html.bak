@@ -813,20 +813,22 @@
               <div class="field">
                 <label>Siding condition</label>
                 <select data-field="condition">
-                  <option value="light">Light — routine upkeep</option>
-                  <option value="moderate" selected>
+                  <option value="1">Light — routine upkeep</option>
+                  <option value="1.2" selected>
                     Moderate — visible grime/mildew
                   </option>
-                  <option value="heavy">
+                  <option value="1.4">
                     Heavy — algae, staining, first wash in years
                   </option>
                 </select>
               </div>
               <div class="field">
-                <label>Soft-wash treatment</label>
+                <label>Cleaner type</label>
                 <select data-field="softwash">
-                  <option value="0">Standard rinse</option>
-                  <option value="1">Add soft-wash chemical treatment</option>
+                  <option value="0">Standard wash</option>
+                  <option value="1">
+                    Non-bleach cleaner instead of bleach
+                  </option>
                 </select>
               </div>
               <div class="line-total">
@@ -861,9 +863,9 @@
               <div class="field">
                 <label>Surface condition</label>
                 <select data-field="condition">
-                  <option value="light">Light</option>
-                  <option value="moderate" selected>Moderate</option>
-                  <option value="heavy">Heavy staining / rust / oil</option>
+                  <option value="1">Light</option>
+                  <option value="1.2" selected>Moderate</option>
+                  <option value="1.4">Heavy staining / rust / oil</option>
                 </select>
               </div>
               <div class="field full">
@@ -905,11 +907,11 @@
               <div class="field">
                 <label>Deck material</label>
                 <select data-field="material">
-                  <option value="raw">Raw wood</option>
-                  <option value="stained">Stained wood</option>
-                  <option value="painted" selected>Painted wood</option>
-                  <option value="trex">Trex / composite</option>
-                  <option value="other">Other</option>
+                  <option value="1.15">Raw wood</option>
+                  <option value="1.20">Stained wood</option>
+                  <option value="1" selected>Painted wood</option>
+                  <option value="1">Trex / composite</option>
+                  <option value="1">Other</option>
                 </select>
               </div>
               <div class="field full">
@@ -951,11 +953,11 @@
               <div class="field">
                 <label>Fence material</label>
                 <select data-field="material">
-                  <option value="vinyl">Vinyl</option>
-                  <option value="raw">Raw wood</option>
-                  <option value="stained">Stained wood</option>
-                  <option value="painted" selected>Painted wood</option>
-                  <option value="other">Other</option>
+                  <option value="0.70">Vinyl</option>
+                  <option value="1.15">Raw wood</option>
+                  <option value="1.20">Stained wood</option>
+                  <option value="1" selected>Painted wood</option>
+                  <option value="1">Other</option>
                 </select>
               </div>
               <div class="field full">
@@ -997,9 +999,9 @@
               <div class="field">
                 <label>Roof pitch</label>
                 <select data-field="pitch">
-                  <option value="low">Low pitch</option>
-                  <option value="medium" selected>Medium pitch</option>
-                  <option value="steep">Steep pitch</option>
+                  <option value="1">Low pitch</option>
+                  <option value="1.25" selected>Medium pitch</option>
+                  <option value="1.5">Steep pitch</option>
                 </select>
               </div>
               <div class="line-total">
@@ -1113,9 +1115,9 @@
               <div class="field">
                 <label>Debris load</label>
                 <select data-field="debris">
-                  <option value="light">Light</option>
-                  <option value="moderate" selected>Moderate</option>
-                  <option value="heavy">Heavy — full of buildup</option>
+                  <option value="1">Light</option>
+                  <option value="1.25" selected>Moderate</option>
+                  <option value="1.6">Heavy — full of buildup</option>
                 </select>
               </div>
               <div class="field">

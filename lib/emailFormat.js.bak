@@ -13,20 +13,6 @@ function escapeHtml(str){
 
 const DISCLAIMER = 'This is only an estimate. Raleigh Power Wash will follow up to confirm a final, accurate quote before any work is scheduled.';
 
-const SERVICE_NAMES = {
-  siding: 'House / Siding Wash',
-  concrete: 'Driveway / Walkway / Patio',
-  deck: 'Deck Wash',
-  fence: 'Fence Wash',
-  roof: 'Roof Soft Wash',
-  windows: 'Window Cleaning',
-  gutters: 'Gutter Cleaning'
-};
-
-function serviceName(item){
-  return SERVICE_NAMES[item.service] || item.label || 'Service';
-}
-
 function buildTextEmail(contact, estimate){
   const out = [];
   out.push('RALEIGH POWER WASH — ESTIMATE REQUEST');
@@ -50,17 +36,12 @@ function buildTextEmail(contact, estimate){
 
   const lineItems = (estimate && estimate.lineItems) || [];
   out.push('SELECTED SERVICES');
-  out.push('');
   if(lineItems.length){
-    lineItems.forEach(item => {
-      out.push(`${serviceName(item)} — ${currency(item.total)}`);
-      (item.details || []).forEach(d => out.push(`   - ${d}`));
-      out.push('');
-    });
+    lineItems.forEach(item => out.push(`• ${item.label}: ${currency(item.total)}`));
   } else {
     out.push('(none selected)');
-    out.push('');
   }
+  out.push('');
 
   out.push('PRICING');
   out.push('Subtotal: ' + currency(estimate.subtotal));
@@ -80,29 +61,19 @@ function buildHtmlEmail(contact, estimate){
   const name = `${escapeHtml(contact.firstName)} ${escapeHtml(contact.lastName)}`.trim();
   const cityLine = [contact.city, [contact.state, contact.zip].filter(Boolean).join(' ')].filter(Boolean).join(', ');
 
-  const serviceBlocksHtml = lineItems.length
-    ? lineItems.map(item => {
-        const detailsHtml = (item.details || [])
-          .map(d => `<li style="font-size:13px;color:#54626E;margin:0 0 3px;">${escapeHtml(d)}</li>`)
-          .join('');
-        return `
-        <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #E4E8EA;">
-          <table style="width:100%;border-collapse:collapse;">
-            <tr>
-              <td style="font-size:15px;font-weight:bold;color:#12283F;">${escapeHtml(serviceName(item))}</td>
-              <td style="font-size:15px;font-weight:bold;color:#12283F;text-align:right;font-family:'Courier New',monospace;white-space:nowrap;">${currency(item.total)}</td>
-            </tr>
-          </table>
-          <ul style="margin:6px 0 0;padding-left:18px;">${detailsHtml}</ul>
-        </div>`;
-      }).join('')
-    : `<p style="font-size:14px;color:#54626E;">No services selected</p>`;
+  const rowsHtml = lineItems.length
+    ? lineItems.map(item => `
+        <tr>
+          <td style="padding:8px 0;border-bottom:1px solid #E4E8EA;color:#182430;font-size:14px;">${escapeHtml(item.label)}</td>
+          <td style="padding:8px 0;border-bottom:1px solid #E4E8EA;color:#182430;font-size:14px;text-align:right;font-family:'Courier New',monospace;white-space:nowrap;">${currency(item.total)}</td>
+        </tr>`).join('')
+    : `<tr><td colspan="2" style="padding:8px 0;color:#54626E;font-size:14px;">No services selected</td></tr>`;
 
   const summaryRows = [];
-  summaryRows.push(['Subtotal', currency(estimate.subtotal)]);
-  if(estimate.discountAmt > 0) summaryRows.push([`Bundle discount (${estimate.discountPct}%)`, '–' + currency(estimate.discountAmt)]);
-  if(estimate.tripAmt > 0) summaryRows.push(['Trip fee', currency(estimate.tripAmt)]);
-  if(estimate.rushAmt > 0) summaryRows.push(['Rush / weekend', currency(estimate.rushAmt)]);
+  summaryRows.push(['Subtotal', currency(estimate.subtotal), false]);
+  if(estimate.discountAmt > 0) summaryRows.push([`Bundle discount (${estimate.discountPct}%)`, '–' + currency(estimate.discountAmt), false]);
+  if(estimate.tripAmt > 0) summaryRows.push(['Trip fee', currency(estimate.tripAmt), false]);
+  if(estimate.rushAmt > 0) summaryRows.push(['Rush / weekend', currency(estimate.rushAmt), false]);
   const summaryRowsHtml = summaryRows.map(([label, value]) => `
     <tr>
       <td style="padding:3px 0;color:#54626E;font-size:13.5px;">${escapeHtml(label)}</td>
@@ -129,10 +100,12 @@ function buildHtmlEmail(contact, estimate){
     ${contact.email ? `<p style="margin:0 0 2px;font-size:14px;color:#182430;">Email: ${escapeHtml(contact.email)}</p>` : ''}
     ${contact.source ? `<p style="margin:8px 0 0;font-size:13px;color:#54626E;">How they heard about us: ${escapeHtml(contact.source)}${contact.source === 'Referral' && contact.referralName ? ' (' + escapeHtml(contact.referralName) + ')' : ''}</p>` : ''}
 
-    <h2 style="font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:#54626E;margin:22px 0 12px;">Selected Services &amp; Selections</h2>
-    ${serviceBlocksHtml}
+    <h2 style="font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:#54626E;margin:22px 0 10px;">Selected Services</h2>
+    <table style="width:100%;border-collapse:collapse;">
+      ${rowsHtml}
+    </table>
 
-    <table style="width:100%;border-collapse:collapse;margin-top:6px;">
+    <table style="width:100%;border-collapse:collapse;margin-top:14px;">
       ${summaryRowsHtml}
       <tr>
         <td style="padding:10px 0 0;border-top:1px solid #12283F;font-size:16px;font-weight:bold;color:#12283F;">Estimate Total</td>
