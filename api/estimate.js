@@ -1,4 +1,4 @@
-const { computeEstimate } = require("../lib/pricing.js.bak");
+const { computeEstimate } = require("../lib/pricing.js");
 const DEFAULT_RATES = require("../lib/defaultRates");
 
 let kv = null;

@@ -3,7 +3,7 @@ const {
   buildTextEmail,
   buildHtmlEmail,
   currency,
-} = require("../lib/emailFormat.js.bak");
+} = require("../lib/emailFormat.js");
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
