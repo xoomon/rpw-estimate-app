@@ -12,7 +12,7 @@ No server to manage, no SMTP setup — Vercel runs the function on demand and Re
 
 1. Go to [resend.com](https://resend.com) and sign up (free tier covers this easily — 3,000 emails/month, 100/day).
 2. **Verify your domain**: Settings → Domains → Add Domain → enter `raleighpowerwash.com`. Resend gives you a few DNS records (TXT/CNAME) to add wherever your domain's DNS is managed (GoDaddy, Cloudflare, Google Domains, etc.). This usually takes a few minutes to propagate, sometimes up to an hour.
-   - You need this because Resend requires sending *from* a domain you've proven you own — you can't send as `@raleighpowerwash.com` without it.
+   - You need this because Resend requires sending _from_ a domain you've proven you own — you can't send as `@raleighpowerwash.com` without it.
    - If you'd rather skip domain verification for now, Resend also gives you a shared `onboarding@resend.dev` address for testing — swap that in as `FROM_EMAIL` temporarily.
 3. Go to API Keys → Create API Key. Copy it — you'll only see it once.
 
@@ -27,6 +27,7 @@ vercel                  # follow the prompts, accept defaults
 ```
 
 **Or via GitHub:**
+
 1. Push this folder to a new GitHub repo.
 2. Go to [vercel.com/new](https://vercel.com/new), import the repo, click Deploy.
 
@@ -36,11 +37,11 @@ Either way, Vercel auto-detects `public/` as static files and `api/` as serverle
 
 In the Vercel dashboard → your project → Settings → Environment Variables, add:
 
-| Name | Value |
-|---|---|
-| `RESEND_API_KEY` | the key you copied in step 1 |
-| `FROM_EMAIL` | `Raleigh Power Wash Estimates <estimates@raleighpowerwash.com>` (must be on your verified domain) |
-| `TO_EMAIL` | `info@raleighpowerwash.com` |
+| Name             | Value                                                                                                       |
+| ---------------- | ----------------------------------------------------------------------------------------------------------- |
+| `RESEND_API_KEY` | the key you copied in step 1                                                                                |
+| `FROM_EMAIL`     | `Raleigh Power Wash Estimates <estimates@raleighpowerwash.com>` (must be on your verified domain)           |
+| `TO_EMAIL`       | `info@raleighpowerwash.com`                                                                                 |
 | `ADMIN_PASSCODE` | any passcode you choose — protects `/admin.html` and the rate-sheet API (see "Admin-only rate sheet" below) |
 
 Then redeploy (Vercel → Deployments → ⋯ → Redeploy) so the function picks up the new variables.
@@ -90,7 +91,7 @@ Below the street address in the contact card, customers see a **"Home square foo
 
 ## Window cleaning: french pane glass & storm windows
 
-The window cleaning card asks two yes/no questions: **French pane glass?** and **Storm windows?** Both only affect the *interior* portion of the cleaning cost — exterior cleaning is untouched either way, since climbing outside to clean glass doesn't get harder because of interior pane style or storm windows.
+The window cleaning card asks two yes/no questions: **French pane glass?** and **Storm windows?** Both only affect the _interior_ portion of the cleaning cost — exterior cleaning is untouched either way, since climbing outside to clean glass doesn't get harder because of interior pane style or storm windows.
 
 - French pane glass adds a surcharge (default 20%) to the interior cleaning cost, since more individual panes take more time to detail.
 - Storm windows add a surcharge (default 50%) to the interior cleaning cost, since each window effectively becomes two panes of glass to clean from indoors.
@@ -99,7 +100,7 @@ The window cleaning card asks two yes/no questions: **French pane glass?** and *
 
 ## Estimate disclaimer
 
-The estimate panel always shows a visible note: *"This is only an estimate. Raleigh Power Wash will follow up with you to confirm a final, accurate quote before any work is scheduled."* The same line appears at the bottom of the copied estimate text and the emailed estimate, so it's consistent everywhere a customer sees pricing.
+The estimate panel always shows a visible note: _"This is only an estimate. Raleigh Power Wash will follow up with you to confirm a final, accurate quote before any work is scheduled."_ The same line appears at the bottom of the copied estimate text and the emailed estimate, so it's consistent everywhere a customer sees pricing.
 
 ## Emailed estimate formatting
 
@@ -107,6 +108,5 @@ The email sent via `api/send-estimate.js` (built in `lib/emailFormat.js`) is gen
 
 - A clean **HTML** version with the Raleigh Power Wash header, a customer info block, a services table, a pricing summary, and the disclaimer — this is what most email clients will render.
 - A plain **text** version with the same structure and content, as a fallback for clients that don't render HTML.
-
 
 # rpw-estimate-app
