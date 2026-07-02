@@ -1,1227 +1,1727 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Raleigh Power Wash — Instant Job Estimate</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --slate:#12283F;
-    --slate-2:#1B3A57;
-    --foam:#F6FAFB;
-    --panel:#FFFFFF;
-    --teal:#0E8C93;
-    --teal-dark:#0B6E74;
-    --concrete:#AEB4BA;
-    --concrete-light:#E4E8EA;
-    --gold:#E8A33D;
-    --gold-dark:#C8842B;
-    --ink:#182430;
-    --ink-soft:#54626E;
-    --line:#DDE3E6;
-    --radius:10px;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--foam);
-    color:var(--ink);
-    font-family:'Inter',sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  .display{font-family:'Big Shoulders Display',sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:0.01em;}
-  .mono{font-family:'IBM Plex Mono',monospace;}
-
-  /* ---------- Header ---------- */
-  header.site{
-    background:linear-gradient(180deg,var(--slate) 0%, var(--slate-2) 100%);
-    color:#fff;
-    padding:28px 24px 34px;
-    position:relative;
-    overflow:hidden;
-  }
-  header.site::after{
-    content:"";
-    position:absolute;
-    left:0; right:0; bottom:0;
-    height:6px;
-    background:repeating-linear-gradient(90deg, var(--teal) 0 28px, var(--gold) 28px 56px);
-    opacity:0.85;
-  }
-  .header-inner{max-width:1180px;margin:0 auto;}
-  .eyebrow{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color:var(--teal);
-    margin:0 0 10px;
-  }
-  h1.brand{
-    font-size:clamp(34px,5.2vw,54px);
-    line-height:0.95;
-    margin:0 0 8px;
-    color:#fff;
-  }
-  .tagline{
-    color:#C7D3DC;
-    font-size:15px;
-    max-width:560px;
-    margin:0;
-    line-height:1.5;
-  }
-  .tagline em{color:var(--gold);font-style:normal;}
-
-  /* ---------- Layout ---------- */
-  main{
-    max-width:1180px;
-    margin:0 auto;
-    padding:32px 24px 80px;
-    display:grid;
-    grid-template-columns:1fr 380px;
-    gap:28px;
-    align-items:start;
-  }
-  @media (max-width:900px){
-    main{grid-template-columns:1fr;}
-  }
-
-  .section-label{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    color:var(--ink-soft);
-    margin:0 0 14px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-  .section-label::after{
-    content:"";
-    flex:1;
-    height:1px;
-    background:var(--line);
-  }
-
-  /* ---------- Service cards ---------- */
-  .service{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    margin-bottom:14px;
-    overflow:hidden;
-    transition:border-color .15s ease, box-shadow .15s ease;
-  }
-  .service.active{
-    border-color:var(--teal);
-    box-shadow:0 2px 14px rgba(14,140,147,0.08);
-  }
-  .service-head{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    padding:16px 18px;
-    cursor:pointer;
-    user-select:none;
-  }
-  .toggle{
-    width:22px;height:22px;
-    border-radius:6px;
-    border:2px solid var(--concrete);
-    flex:none;
-    position:relative;
-    transition:background .15s ease, border-color .15s ease;
-  }
-  .service.active .toggle{background:var(--teal);border-color:var(--teal);}
-  .toggle::after{
-    content:"";
-    position:absolute; left:6px; top:2px;
-    width:6px; height:11px;
-    border:solid #fff; border-width:0 2px 2px 0;
-    transform:rotate(45deg);
-    opacity:0;
-  }
-  .service.active .toggle::after{opacity:1;}
-  .service-title{
-    font-size:17px;
-    font-weight:700;
-    flex:1;
-  }
-  .service-title small{
-    display:block;
-    font-weight:500;
-    font-size:12.5px;
-    color:var(--ink-soft);
-    margin-top:2px;
-  }
-  .service-chip{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    color:var(--teal-dark);
-    background:#E4F4F4;
-    padding:4px 9px;
-    border-radius:20px;
-    white-space:nowrap;
-  }
-  .service.active .service-chip{background:var(--teal);color:#fff;}
-
-  .service-body{
-    max-height:0;
-    overflow:hidden;
-    transition:max-height .25s ease;
-    border-top:1px solid transparent;
-  }
-  .service.active .service-body{
-    max-height:520px;
-    border-top:1px solid var(--line);
-  }
-  .service-body-inner{
-    padding:16px 18px 20px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px 16px;
-  }
-  .field{display:flex;flex-direction:column;gap:6px;}
-  .field.full{grid-column:1/-1;}
-  .field label{
-    font-size:12.5px;
-    font-weight:600;
-    color:var(--ink-soft);
-  }
-  .field input[type="number"], .field select{
-    border:1px solid var(--line);
-    border-radius:7px;
-    padding:9px 10px;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:14px;
-    color:var(--ink);
-    background:#fbfcfd;
-  }
-  .field select{font-family:'Inter',sans-serif;}
-  .field input:focus, .field select:focus{
-    outline:2px solid var(--teal);
-    outline-offset:1px;
-  }
-  .line-total{
-    grid-column:1/-1;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding-top:10px;
-    border-top:1px dashed var(--line);
-    font-family:'IBM Plex Mono',monospace;
-    font-size:13.5px;
-    color:var(--ink-soft);
-  }
-  .line-total b{color:var(--slate);font-size:15px;}
-
-  /* ---------- Global options ---------- */
-  .global-card{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:18px;
-    margin-bottom:14px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px 16px;
-  }
-
-  /* ---------- Contact card ---------- */
-  .contact-card{
-    background:var(--panel);
-    border:1px solid var(--teal);
-    box-shadow:0 2px 14px rgba(14,140,147,0.08);
-    border-radius:var(--radius);
-    padding:20px 20px 18px;
-    margin-bottom:22px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px 16px;
-  }
-  .contact-card .contact-heading{
-    grid-column:1/-1;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:2px;
-  }
-  .contact-card .contact-heading h2{
-    font-family:'Big Shoulders Display',sans-serif;
-    font-weight:700;
-    text-transform:uppercase;
-    font-size:20px;
-    letter-spacing:0.01em;
-    color:var(--slate);
-    margin:0;
-  }
-  .contact-card .contact-heading .status-pill{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11.5px;
-    padding:4px 10px;
-    border-radius:20px;
-    background:#FBEBD3;
-    color:var(--gold-dark);
-    white-space:nowrap;
-  }
-  .contact-card .contact-heading .status-pill.done{
-    background:#DCF0EF;
-    color:var(--teal-dark);
-  }
-  .contact-card .field input, .contact-card .field select{
-    border:1px solid var(--line);
-    border-radius:7px;
-    padding:9px 10px;
-    font-family:'Inter',sans-serif;
-    font-size:14px;
-    color:var(--ink);
-    background:#fbfcfd;
-  }
-  .contact-card .field input:invalid:not(:placeholder-shown){
-    border-color:#D9764F;
-  }
-  .home-sqft-field{
-    background:#EAF6F6;
-    border:1px solid var(--teal);
-    border-radius:8px;
-    padding:12px 14px;
-  }
-  .home-sqft-field label{color:var(--teal-dark);}
-  .field-hint{
-    font-size:12px;
-    color:var(--ink-soft);
-    margin:4px 0 0;
-    line-height:1.4;
-    font-weight:400;
-  }
-  #referralNameField{display:none;}
-  #referralNameField.show{display:flex;}
-
-  /* ---------- Estimate lock overlay ---------- */
-  .estimate-panel{position:relative;}
-  .estimate-lock{
-    position:absolute;
-    inset:0;
-    background:linear-gradient(180deg,rgba(18,40,63,0.97),rgba(27,58,87,0.97));
-    border-radius:14px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:28px;
-    z-index:5;
-  }
-  .estimate-lock .lock-icon{
-    width:34px;height:34px;
-    border:2px solid var(--gold);
-    border-radius:8px;
-    margin-bottom:14px;
-    position:relative;
-  }
-  .estimate-lock .lock-icon::before{
-    content:"";
-    position:absolute;
-    top:-13px;left:50%;
-    transform:translateX(-50%);
-    width:16px;height:16px;
-    border:2px solid var(--gold);
-    border-bottom:none;
-    border-radius:10px 10px 0 0;
-  }
-  .estimate-lock p{
-    color:#D7E1E7;
-    font-size:13.5px;
-    line-height:1.6;
-    margin:0;
-    max-width:230px;
-  }
-  .estimate-lock p strong{color:#fff;}
-
-  @media (max-width:640px){ .service-body-inner{grid-template-columns:1fr;} }
-
-  /* ---------- Estimate panel ---------- */
-  .estimate-panel{
-    position:sticky;
-    top:20px;
-    background:var(--slate);
-    color:#fff;
-    border-radius:14px;
-    padding:22px 22px 20px;
-    overflow:hidden;
-  }
-  .meter-row{
-    display:flex;
-    gap:18px;
-    align-items:flex-end;
-    margin-bottom:18px;
-  }
-  .gauge-wrap{
-    width:38px;height:130px;
-    background:rgba(255,255,255,0.08);
-    border-radius:20px;
-    position:relative;
-    flex:none;
-    border:1px solid rgba(255,255,255,0.15);
-  }
-  .gauge-fill{
-    position:absolute;
-    left:0;right:0;bottom:0;
-    background:linear-gradient(180deg, var(--teal) 0%, var(--teal-dark) 100%);
-    border-radius:20px;
-    height:4%;
-    transition:height .4s cubic-bezier(.4,0,.2,1);
-  }
-  .gauge-fill::after{
-    content:"";
-    position:absolute;
-    top:-3px;left:0;right:0;
-    height:6px;
-    background:rgba(255,255,255,0.35);
-    border-radius:50%;
-  }
-  .meter-label{flex:1;}
-  .meter-label .eyebrow-sm{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    color:#8FAAB8;
-    margin:0 0 4px;
-  }
-  .total-figure{
-    font-family:'Big Shoulders Display',sans-serif;
-    font-weight:800;
-    font-size:44px;
-    line-height:1;
-    color:#fff;
-  }
-  .total-figure span{font-size:22px;color:var(--gold);}
-
-  .line-items{
-    border-top:1px solid rgba(255,255,255,0.15);
-    padding-top:14px;
-    margin-bottom:14px;
-    display:flex;
-    flex-direction:column;
-    gap:9px;
-    max-height:260px;
-    overflow-y:auto;
-  }
-  .line-item{
-    display:flex;
-    justify-content:space-between;
-    font-size:13.5px;
-    color:#D7E1E7;
-  }
-  .line-item b{
-    font-family:'IBM Plex Mono',monospace;
-    color:#fff;
-    font-weight:600;
-  }
-  .line-item.discount{color:var(--gold);}
-  .line-item.discount b{color:var(--gold);}
-  .empty-note{
-    font-size:13px;
-    color:#8FAAB8;
-    padding:10px 0;
-  }
-
-  .subtotal-block{
-    border-top:1px solid rgba(255,255,255,0.15);
-    padding-top:12px;
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    font-size:13.5px;
-    color:#B9C7CF;
-    margin-bottom:16px;
-  }
-  .subtotal-block .row{display:flex;justify-content:space-between;}
-  .subtotal-block .row.grand{
-    font-size:15px;
-    color:#fff;
-    font-weight:700;
-    padding-top:6px;
-    border-top:1px dashed rgba(255,255,255,0.2);
-  }
-
-  .cta-row{display:flex;gap:10px;}
-  button.cta{
-    flex:1;
-    border:none;
-    border-radius:8px;
-    padding:13px 14px;
-    font-family:'Inter',sans-serif;
-    font-weight:700;
-    font-size:14px;
-    cursor:pointer;
-    transition:transform .1s ease, filter .15s ease;
-  }
-  button.cta:active{transform:translateY(1px);}
-  button.cta.primary{background:var(--gold);color:var(--slate);}
-  button.cta.primary:hover{filter:brightness(1.06);}
-  button.cta.secondary{background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.25);}
-  button.cta.secondary:hover{background:rgba(255,255,255,0.14);}
-  button.cta.submit-btn{
-    width:100%;
-    margin-top:10px;
-    padding:14px;
-  }
-
-  .min-note{
-    font-size:11.5px;
-    color:#7F97A3;
-    margin-top:12px;
-    line-height:1.5;
-  }
-
-  .estimate-disclaimer{
-    font-size:12px;
-    color:#D7E1E7;
-    background:rgba(232,163,61,0.12);
-    border:1px solid rgba(232,163,61,0.35);
-    border-radius:8px;
-    padding:10px 12px;
-    line-height:1.5;
-    margin:0 0 16px;
-  }
-
-  footer.site{
-    max-width:1180px;
-    margin:0 auto;
-    padding:0 24px 50px;
-    color:var(--ink-soft);
-    font-size:12.5px;
-    line-height:1.6;
-  }
-  footer.site strong{color:var(--slate);}
-
-  @media (prefers-reduced-motion: reduce){
-    .gauge-fill, .service-body{transition:none;}
-  }
-</style>
-</head>
-<body>
-
-<header class="site">
-  <div class="header-inner">
-    <p class="eyebrow">Raleigh Power Wash · Raleigh / Cary, NC</p>
-    <h1 class="brand display">Instant Job Estimate</h1>
-    <p class="tagline">Build a quote line by line — power washing, windows, and gutters — priced by square and linear footage. <em>Seek the welfare of the city.</em> — Jeremiah 29:7</p>
-  </div>
-</header>
-
-<main>
-  <div class="form-col">
-
-    <div class="contact-card" id="contactCard">
-      <div class="contact-heading">
-        <h2>Your information</h2>
-        <span class="status-pill" id="contactStatus">Required before pricing</span>
-      </div>
-      <div class="field"><label>First name</label><input type="text" id="c_firstName" autocomplete="given-name" required></div>
-      <div class="field"><label>Last name</label><input type="text" id="c_lastName" autocomplete="family-name" required></div>
-      <div class="field full"><label>Street address</label><input type="text" id="c_address" autocomplete="street-address" required></div>
-      <div class="field full home-sqft-field">
-        <label>Home square footage</label>
-        <input type="number" min="0" step="1" id="c_homeSqft" placeholder="e.g. 2400">
-        <p class="field-hint">We'll use this to fill in the house, roof, window, and gutter estimates below — you can still adjust any of them individually.</p>
-      </div>
-      <div class="field"><label>City</label><input type="text" id="c_city" autocomplete="address-level2" required></div>
-      <div class="field"><label>State</label>
-        <select id="c_state" autocomplete="address-level1" required>
-          <option value="" selected disabled>Select...</option>
-          <option value="NC">North Carolina</option>
-          <option value="SC">South Carolina</option>
-          <option value="VA">Virginia</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div class="field"><label>ZIP code</label><input type="text" id="c_zip" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" autocomplete="postal-code" required></div>
-      <div class="field"><label>Phone number</label><input type="tel" id="c_phone" autocomplete="tel" placeholder="(919) 555-0123" required></div>
-      <div class="field full"><label>Email address</label><input type="email" id="c_email" autocomplete="email" placeholder="you@example.com" required></div>
-      <div class="field full"><label>How did you hear about us?</label>
-        <select id="c_source" required>
-          <option value="" selected disabled>Select...</option>
-          <option value="Referral">Referral</option>
-          <option value="Google Search">Google search</option>
-          <option value="Google Maps / Business Profile">Google Maps / Business profile</option>
-          <option value="Facebook / Instagram">Facebook / Instagram</option>
-          <option value="Nextdoor">Nextdoor</option>
-          <option value="Yard sign / truck">Saw a yard sign or truck</option>
-          <option value="Repeat customer">I'm a repeat customer</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div class="field full" id="referralNameField"><label>Who referred you?</label><input type="text" id="c_referralName" placeholder="Referral's name"></div>
-    </div>
-
-    <p class="section-label">Power washing</p>
-
-    <div class="service" data-service="siding">
-      <div class="service-head">
-        <div class="toggle"></div>
-        <div class="service-title">House / Siding Wash<small>Soft wash or pressure wash by exterior square footage</small></div>
-        <div class="service-chip mono">$0.00</div>
-      </div>
-      <div class="service-body">
-        <div class="service-body-inner">
-          <div class="field"><label>Exterior square footage</label><input type="number" min="0" step="1" data-field="sqft" placeholder="e.g. 2400"></div>
-          <div class="field"><label>Stories</label>
-            <select data-field="stories">
-              <option value="1">1 story</option>
-              <option value="2" selected>2 stories</option>
-              <option value="3">3 stories</option>
-            </select>
-          </div>
-          <div class="field"><label>Siding condition</label>
-            <select data-field="condition">
-              <option value="1">Light — routine upkeep</option>
-              <option value="1.2" selected>Moderate — visible grime/mildew</option>
-              <option value="1.4">Heavy — algae, staining, first wash in years</option>
-            </select>
-          </div>
-          <div class="field"><label>Soft-wash treatment</label>
-            <select data-field="softwash">
-              <option value="0">Standard rinse</option>
-              <option value="1">Add soft-wash chemical treatment</option>
-            </select>
-          </div>
-          <div class="line-total"><span>Line total</span><b class="mono">$0.00</b></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="service" data-service="concrete">
-      <div class="service-head">
-        <div class="toggle"></div>
-        <div class="service-title">Driveway / Walkway / Patio<small>Concrete, pavers, or stamped surfaces by square footage</small></div>
-        <div class="service-chip mono">$0.00</div>
-      </div>
-      <div class="service-body">
-        <div class="service-body-inner">
-          <div class="field"><label>Total square footage</label><input type="number" min="0" step="1" data-field="sqft" placeholder="e.g. 900"></div>
-          <div class="field"><label>Surface condition</label>
-            <select data-field="condition">
-              <option value="1">Light</option>
-              <option value="1.2" selected>Moderate</option>
-              <option value="1.4">Heavy staining / rust / oil</option>
-            </select>
-          </div>
-          <div class="field full"><label>Rust or oil stain treatment</label>
-            <select data-field="rust">
-              <option value="0">Not needed</option>
-              <option value="1">Add stain treatment</option>
-            </select>
-          </div>
-          <div class="line-total"><span>Line total</span><b class="mono">$0.00</b></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="service" data-service="deck">
-      <div class="service-head">
-        <div class="toggle"></div>
-        <div class="service-title">Deck Wash<small>Priced by square footage, adjusted for material</small></div>
-        <div class="service-chip mono">$0.00</div>
-      </div>
-      <div class="service-body">
-        <div class="service-body-inner">
-          <div class="field"><label>Deck square footage</label><input type="number" min="0" step="1" data-field="sqft" placeholder="e.g. 300"></div>
-          <div class="field"><label>Deck material</label>
-            <select data-field="material">
-              <option value="1.15">Raw wood</option>
-              <option value="1.20">Stained wood</option>
-              <option value="1" selected>Painted wood</option>
-              <option value="1">Trex / composite</option>
-              <option value="1">Other</option>
-            </select>
-          </div>
-          <div class="field full"><label>Wood brightening / sealant prep</label>
-            <select data-field="brighten">
-              <option value="0">Not needed</option>
-              <option value="1">Add brightening treatment</option>
-            </select>
-          </div>
-          <div class="line-total"><span>Line total</span><b class="mono">$0.00</b></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="service" data-service="fence">
-      <div class="service-head">
-        <div class="toggle"></div>
-        <div class="service-title">Fence Wash<small>Priced by linear footage, adjusted for material</small></div>
-        <div class="service-chip mono">$0.00</div>
-      </div>
-      <div class="service-body">
-        <div class="service-body-inner">
-          <div class="field"><label>Fence linear footage</label><input type="number" min="0" step="1" data-field="linft" placeholder="e.g. 150"></div>
-          <div class="field"><label>Fence material</label>
-            <select data-field="material">
-              <option value="0.70">Vinyl</option>
-              <option value="1.15">Raw wood</option>
-              <option value="1.20">Stained wood</option>
-              <option value="1" selected>Painted wood</option>
-              <option value="1">Other</option>
-            </select>
-          </div>
-          <div class="field full"><label>Wood brightening / sealant prep</label>
-            <select data-field="brighten">
-              <option value="0">Not needed</option>
-              <option value="1">Add brightening treatment</option>
-            </select>
-          </div>
-          <div class="line-total"><span>Line total</span><b class="mono">$0.00</b></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="service" data-service="roof">
-      <div class="service-head">
-        <div class="toggle"></div>
-        <div class="service-title">Roof Soft Wash<small>Algae / streak treatment by roof square footage</small></div>
-        <div class="service-chip mono">$0.00</div>
-      </div>
-      <div class="service-body">
-        <div class="service-body-inner">
-          <div class="field"><label>Roof square footage</label><input type="number" min="0" step="1" data-field="sqft" placeholder="e.g. 1800"></div>
-          <div class="field"><label>Roof pitch</label>
-            <select data-field="pitch">
-              <option value="1">Low pitch</option>
-              <option value="1.25" selected>Medium pitch</option>
-              <option value="1.5">Steep pitch</option>
-            </select>
-          </div>
-          <div class="line-total"><span>Line total</span><b class="mono">$0.00</b></div>
-        </div>
-      </div>
-    </div>
-
-    <p class="section-label">Windows &amp; gutters</p>
-
-    <div class="service" data-service="windows">
-      <div class="service-head">
-        <div class="toggle"></div>
-        <div class="service-title">Window Cleaning<small>Priced by glass square footage, in/out, plus story access</small></div>
-        <div class="service-chip mono">$0.00</div>
-      </div>
-      <div class="service-body">
-        <div class="service-body-inner">
-          <div class="field"><label>Window glass square footage</label><input type="number" min="0" step="1" data-field="sqft" placeholder="e.g. 180"></div>
-          <div class="field"><label>Stories</label>
-            <select data-field="stories">
-              <option value="1">1 story</option>
-              <option value="2" selected>2 stories</option>
-              <option value="3">3 stories</option>
-            </select>
-          </div>
-          <div class="field full"><label>Cleaning scope</label>
-            <select data-field="scope">
-              <option value="ext">Exterior only</option>
-              <option value="both" selected>Interior + exterior</option>
-            </select>
-          </div>
-          <div class="field"><label>French pane glass?</label>
-            <select data-field="frenchPane">
-              <option value="0" selected>No</option>
-              <option value="1">Yes</option>
-            </select>
-          </div>
-          <div class="field"><label>Storm windows?</label>
-            <select data-field="stormWindows">
-              <option value="0" selected>No</option>
-              <option value="1">Yes</option>
-            </select>
-          </div>
-          <div class="field full"><label>Number of screens to clean</label><input type="number" min="0" step="1" data-field="screens" placeholder="e.g. 12"></div>
-          <div class="line-total"><span>Line total</span><b class="mono">$0.00</b></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="service" data-service="gutters">
-      <div class="service-head">
-        <div class="toggle"></div>
-        <div class="service-title">Gutter Cleaning<small>Priced by home square footage plus story access</small></div>
-        <div class="service-chip mono">$0.00</div>
-      </div>
-      <div class="service-body">
-        <div class="service-body-inner">
-          <div class="field"><label>Home square footage</label><input type="number" min="0" step="1" data-field="sqft" placeholder="e.g. 2400"></div>
-          <div class="field"><label>Stories</label>
-            <select data-field="stories">
-              <option value="1">1 story</option>
-              <option value="2" selected>2 stories</option>
-              <option value="3">3 stories</option>
-            </select>
-          </div>
-          <div class="field"><label>Debris load</label>
-            <select data-field="debris">
-              <option value="1">Light</option>
-              <option value="1.25" selected>Moderate</option>
-              <option value="1.6">Heavy — full of buildup</option>
-            </select>
-          </div>
-          <div class="field"><label>Downspout flush</label>
-            <select data-field="downspouts">
-              <option value="0">Not included</option>
-              <option value="1" selected>Include downspout flush</option>
-            </select>
-          </div>
-          <div class="field full"><label>Gutter guard install</label>
-            <select data-field="guards">
-              <option value="0">Not needed</option>
-              <option value="1">Add gutter guard installation</option>
-            </select>
-          </div>
-          <div class="field full"><label>Gutter brightening (clean outside of gutters)</label>
-            <select data-field="brighten">
-              <option value="0">Not needed</option>
-              <option value="1">Add gutter brightening</option>
-            </select>
-          </div>
-          <div class="line-total"><span>Line total</span><b class="mono">$0.00</b></div>
-        </div>
-      </div>
-    </div>
-
-    <p class="section-label">Job-wide options</p>
-    <div class="global-card">
-      <div class="field"><label>Trip / travel fee</label>
-        <select id="tripfee">
-          <option value="0" selected>Within standard service area</option>
-          <option value="1">Outside service area</option>
-        </select>
-      </div>
-      <div class="field"><label>Rush / weekend scheduling</label>
-        <select id="rush">
-          <option value="0" selected>Standard scheduling</option>
-          <option value="1">Rush / weekend add-on</option>
-        </select>
-      </div>
-    </div>
-
-  </div>
-
-  <aside class="estimate-panel">
-    <div class="estimate-lock" id="estimateLock">
-      <div class="lock-icon"></div>
-      <p><strong>Add your contact info</strong> above to unlock your instant estimate.</p>
-    </div>
-    <div class="meter-row">
-      <div class="gauge-wrap"><div class="gauge-fill" id="gaugeFill"></div></div>
-      <div class="meter-label">
-        <p class="eyebrow-sm">Running total</p>
-        <div class="total-figure mono"><span>$</span><span id="totalFigure">0</span></div>
-      </div>
-    </div>
-
-    <div class="line-items" id="lineItems">
-      <p class="empty-note">Select a service on the left to start building the estimate.</p>
-    </div>
-
-    <div class="subtotal-block" id="subtotalBlock" style="display:none;">
-      <div class="row"><span>Subtotal</span><span class="mono" id="rowSubtotal">$0.00</span></div>
-      <div class="row" id="rowDiscountWrap" style="display:none;"><span id="rowDiscountLabel">Bundle discount</span><span class="mono" id="rowDiscount">–$0.00</span></div>
-      <div class="row" id="rowTripWrap" style="display:none;"><span>Trip fee</span><span class="mono" id="rowTrip">$0.00</span></div>
-      <div class="row" id="rowRushWrap" style="display:none;"><span>Rush / weekend</span><span class="mono" id="rowRush">$0.00</span></div>
-      <div class="row grand"><span>Estimate total</span><span class="mono" id="rowGrand">$0.00</span></div>
-    </div>
-
-    <p class="estimate-disclaimer">This is only an estimate. Raleigh Power Wash will follow up with you to confirm a final, accurate quote before any work is scheduled.</p>
-
-    <div class="cta-row">
-      <button class="cta secondary" id="resetBtn" type="button">Reset</button>
-      <button class="cta secondary" id="copyBtn" type="button">Copy estimate</button>
-    </div>
-    <button class="cta primary submit-btn" id="submitBtn" type="button">Submit estimate to Raleigh Power Wash</button>
-    <p class="min-note" id="minNote"></p>
-  </aside>
-</main>
-
-<footer class="site">
-  <strong>Raleigh Power Wash</strong> — Raleigh &amp; Cary, NC. All figures are instant estimates based on the measurements entered; a final quote may vary after an on-site walkthrough.
-</footer>
-
-<script>
-(function(){
-  const GUARD_MAX = 2200; // gauge fill scale ceiling
-
-  function currency(n){
-    n = Number(n) || 0;
-    return '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-  }
-
-  // ---------- Contact info ----------
-  const contactIds = ['c_firstName','c_lastName','c_address','c_city','c_state','c_zip','c_phone','c_email','c_source'];
-  const sourceSelect = document.getElementById('c_source');
-  const referralField = document.getElementById('referralNameField');
-  const referralInput = document.getElementById('c_referralName');
-
-  function updateReferralVisibility(){
-    if(sourceSelect.value === 'Referral'){
-      referralField.classList.add('show');
-    } else {
-      referralField.classList.remove('show');
-      referralInput.value = '';
-    }
-  }
-
-  function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-  function isValidPhone(v){ return (v.replace(/\D/g,'').length >= 10); }
-  function isValidZip(v){ return /^[0-9]{5}$/.test(v); }
-
-  function contactComplete(){
-    for(const id of contactIds){
-      const el = document.getElementById(id);
-      if(!el.value || !el.value.trim()) return false;
-    }
-    if(!isValidEmail(document.getElementById('c_email').value)) return false;
-    if(!isValidPhone(document.getElementById('c_phone').value)) return false;
-    if(!isValidZip(document.getElementById('c_zip').value)) return false;
-    if(sourceSelect.value === 'Referral' && !referralInput.value.trim()) return false;
-    return true;
-  }
-
-  function updateContactStatus(){
-    const complete = contactComplete();
-    const pill = document.getElementById('contactStatus');
-    const lock = document.getElementById('estimateLock');
-    if(complete){
-      pill.textContent = 'Complete';
-      pill.classList.add('done');
-      lock.style.display = 'none';
-    } else {
-      pill.textContent = 'Required before pricing';
-      pill.classList.remove('done');
-      lock.style.display = 'flex';
-    }
-    return complete;
-  }
-
-  // Contact fields only affect the lock overlay — never trigger a pricing call.
-  document.querySelectorAll('.contact-card input, .contact-card select').forEach(el=>{
-    el.addEventListener('input', updateContactStatus);
-    el.addEventListener('change', updateContactStatus);
-  });
-  sourceSelect.addEventListener('change', updateReferralVisibility);
-
-  // ---------- Home square footage auto-fill ----------
-  function setSqftField(service, value){
-    const card = document.querySelector(`.service[data-service="${service}"]`);
-    if(!card) return;
-    const input = card.querySelector('[data-field="sqft"]');
-    if(input) input.value = value;
-  }
-
-  const homeSqftInput = document.getElementById('c_homeSqft');
-  homeSqftInput.addEventListener('input', ()=>{
-    const value = homeSqftInput.value;
-    setSqftField('siding', value);
-    setSqftField('windows', value);
-    setSqftField('roof', value);
-    setSqftField('gutters', value);
-    scheduleRecalc();
-  });
-
-  const cards = Array.from(document.querySelectorAll('.service'));
-
-  cards.forEach(card=>{
-    const head = card.querySelector('.service-head');
-    head.addEventListener('click', ()=>{
-      card.classList.toggle('active');
-      scheduleRecalc();
-    });
-    card.querySelectorAll('input, select').forEach(el=>{
-      el.addEventListener('click', e=> e.stopPropagation());
-      el.addEventListener('input', scheduleRecalc);
-      el.addEventListener('change', scheduleRecalc);
-    });
-  });
-
-  document.getElementById('tripfee').addEventListener('change', scheduleRecalc);
-  document.getElementById('rush').addEventListener('change', scheduleRecalc);
-
-  // ---------- Pricing (calculated server-side — no rates ever live in this page) ----------
-  let lastSummaryText = '';
-  let lastActiveCount = 0;
-  let lastGrandTotal = 0;
-  let lastEstimateData = null;
-  let requestSeq = 0;
-  let recalcTimer = null;
-
-  function scheduleRecalc(){
-    clearTimeout(recalcTimer);
-    recalcTimer = setTimeout(recalcRemote, 300);
-  }
-
-  function buildPayload(){
-    const services = {};
-    cards.forEach(card=>{
-      const service = card.dataset.service;
-      const fields = {active: card.classList.contains('active')};
-      card.querySelectorAll('[data-field]').forEach(el=>{
-        fields[el.dataset.field] = el.value;
-      });
-      services[service] = fields;
-    });
-    return {
-      services,
-      global: {
-        tripfee: document.getElementById('tripfee').value === '1',
-        rush: document.getElementById('rush').value === '1'
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raleigh Power Wash — Instant Job Estimate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --slate: #12283f;
+        --slate-2: #1b3a57;
+        --foam: #f6fafb;
+        --panel: #ffffff;
+        --teal: #0e8c93;
+        --teal-dark: #0b6e74;
+        --concrete: #aeb4ba;
+        --concrete-light: #e4e8ea;
+        --gold: #e8a33d;
+        --gold-dark: #c8842b;
+        --ink: #182430;
+        --ink-soft: #54626e;
+        --line: #dde3e6;
+        --radius: 10px;
       }
-    };
-  }
-
-  async function recalcRemote(){
-    updateContactStatus();
-    const seq = ++requestSeq;
-    let data;
-    try{
-      const resp = await fetch('/api/estimate', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(buildPayload())
-      });
-      if(!resp.ok) throw new Error('Estimate request failed: ' + resp.status);
-      data = await resp.json();
-    } catch(err){
-      console.error('Failed to calculate estimate:', err);
-      if(seq === requestSeq){
-        document.getElementById('minNote').textContent = 'Couldn\u2019t reach the pricing service — check your connection and try again.';
+      * {
+        box-sizing: border-box;
       }
-      return;
-    }
-    if(seq !== requestSeq) return; // a newer request already landed, ignore this stale one
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--foam);
+        color: var(--ink);
+        font-family: "Inter", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .display {
+        font-family: "Big Shoulders Display", sans-serif;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+      }
+      .mono {
+        font-family: "IBM Plex Mono", monospace;
+      }
 
-    cards.forEach(card=>{
-      const service = card.dataset.service;
-      const total = (data.serviceTotals && data.serviceTotals[service]) || 0;
-      const chip = card.querySelector('.service-chip');
-      if(chip) chip.textContent = currency(total);
-      const lt = card.querySelector('.line-total b');
-      if(lt) lt.textContent = currency(total);
-    });
+      /* ---------- Header ---------- */
+      header.site {
+        background: linear-gradient(
+          180deg,
+          var(--slate) 0%,
+          var(--slate-2) 100%
+        );
+        color: #fff;
+        padding: 28px 24px 34px;
+        position: relative;
+        overflow: hidden;
+      }
+      header.site::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 6px;
+        background: repeating-linear-gradient(
+          90deg,
+          var(--teal) 0 28px,
+          var(--gold) 28px 56px
+        );
+        opacity: 0.85;
+      }
+      .header-inner {
+        max-width: 1180px;
+        margin: 0 auto;
+      }
+      .eyebrow {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin: 0 0 10px;
+      }
+      h1.brand {
+        font-size: clamp(34px, 5.2vw, 54px);
+        line-height: 0.95;
+        margin: 0 0 8px;
+        color: #fff;
+      }
+      .tagline {
+        color: #c7d3dc;
+        font-size: 15px;
+        max-width: 560px;
+        margin: 0;
+        line-height: 1.5;
+      }
+      .tagline em {
+        color: var(--gold);
+        font-style: normal;
+      }
 
-    const lineItemsEl = document.getElementById('lineItems');
-    lineItemsEl.innerHTML = '';
-    const lineItems = data.lineItems || [];
-    if(lineItems.length === 0){
-      lineItemsEl.innerHTML = '<p class="empty-note">Select a service on the left to start building the estimate.</p>';
-    } else {
-      lineItems.forEach(item=>{
-        const row = document.createElement('div');
-        row.className = 'line-item';
-        row.innerHTML = `<span>${item.label}</span><b>${currency(item.total)}</b>`;
-        lineItemsEl.appendChild(row);
-      });
-    }
-
-    document.getElementById('rowSubtotal').textContent = currency(data.subtotal);
-    const discWrap = document.getElementById('rowDiscountWrap');
-    if(data.discountAmt > 0){
-      discWrap.style.display = 'flex';
-      document.getElementById('rowDiscountLabel').textContent = `Bundle discount (${data.discountPct}%)`;
-      document.getElementById('rowDiscount').textContent = '–' + currency(data.discountAmt);
-    } else {
-      discWrap.style.display = 'none';
-    }
-
-    const tripWrap = document.getElementById('rowTripWrap');
-    if(data.tripAmt > 0){
-      tripWrap.style.display = 'flex';
-      document.getElementById('rowTrip').textContent = currency(data.tripAmt);
-    } else { tripWrap.style.display = 'none'; }
-
-    const rushWrap = document.getElementById('rowRushWrap');
-    if(data.rushAmt > 0){
-      rushWrap.style.display = 'flex';
-      document.getElementById('rowRush').textContent = currency(data.rushAmt);
-    } else { rushWrap.style.display = 'none'; }
-
-    document.getElementById('rowGrand').textContent = currency(data.grand);
-    document.getElementById('subtotalBlock').style.display = data.activeCount > 0 ? 'flex' : 'none';
-    document.getElementById('totalFigure').textContent = Number(data.grand || 0).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
-
-    const pct = Math.min(100, Math.max(4, (data.grand / GUARD_MAX) * 100));
-    document.getElementById('gaugeFill').style.height = pct + '%';
-
-    document.getElementById('minNote').textContent = data.minApplied
-      ? `Minimum job charge of ${currency(data.minJob)} applied.`
-      : (data.activeCount > 0 ? 'Totals update live as you edit any field above.' : '');
-
-    lastSummaryText = buildSummaryText(data);
-    lastActiveCount = data.activeCount || 0;
-    lastGrandTotal = data.grand || 0;
-    lastEstimateData = data;
-  }
-
-  function buildSummaryText(data){
-    const out = [];
-    out.push('RALEIGH POWER WASH — INSTANT ESTIMATE');
-    out.push('Raleigh / Cary, NC');
-    out.push('');
-    const fn = document.getElementById('c_firstName').value.trim();
-    const ln = document.getElementById('c_lastName').value.trim();
-    if(fn || ln){
-      out.push('CUSTOMER');
-      out.push(`${fn} ${ln}`.trim());
-      const addr = document.getElementById('c_address').value.trim();
-      const city = document.getElementById('c_city').value.trim();
-      const state = document.getElementById('c_state').value.trim();
-      const zip = document.getElementById('c_zip').value.trim();
-      if(addr) out.push(addr);
-      const cityLine = [city, [state, zip].filter(Boolean).join(' ')].filter(Boolean).join(', ');
-      if(cityLine) out.push(cityLine);
-      const phone = document.getElementById('c_phone').value.trim();
-      const email = document.getElementById('c_email').value.trim();
-      if(phone) out.push('Phone: ' + phone);
-      if(email) out.push('Email: ' + email);
-      const source = sourceSelect.value;
-      if(source){
-        let sourceLine = 'How they heard about us: ' + source;
-        if(source === 'Referral' && referralInput.value.trim()){
-          sourceLine += ' (' + referralInput.value.trim() + ')';
+      /* ---------- Layout ---------- */
+      main {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 32px 24px 80px;
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 28px;
+        align-items: start;
+      }
+      @media (max-width: 900px) {
+        main {
+          grid-template-columns: 1fr;
         }
-        out.push(sourceLine);
-      }
-      out.push('');
-    }
-    const lineItems = data.lineItems || [];
-    if(lineItems.length){
-      lineItems.forEach(item => out.push(`• ${item.label}: ${currency(item.total)}`));
-      out.push('');
-      out.push('Subtotal: ' + currency(data.subtotal));
-      if(data.discountAmt > 0) out.push(`Bundle discount (${data.discountPct}%): –${currency(data.discountAmt)}`);
-      if(data.tripAmt > 0) out.push('Trip fee: ' + currency(data.tripAmt));
-      if(data.rushAmt > 0) out.push('Rush / weekend: ' + currency(data.rushAmt));
-      if(data.minApplied) out.push(`(Minimum job charge of ${currency(data.minJob)} applied)`);
-      out.push('');
-      out.push('ESTIMATE TOTAL: ' + currency(data.grand));
-    } else {
-      out.push('No services selected yet.');
-    }
-    out.push('');
-    out.push('This is only an estimate. Raleigh Power Wash will follow up to confirm a final, accurate quote before any work is scheduled.');
-    return out.join('\n');
-  }
-
-  document.getElementById('copyBtn').addEventListener('click', async ()=>{
-    if(!contactComplete()){
-      document.getElementById('contactCard').scrollIntoView({behavior:'smooth', block:'start'});
-      document.getElementById('contactCard').style.borderColor = '#D9764F';
-      setTimeout(()=>{ document.getElementById('contactCard').style.borderColor = ''; }, 1400);
-      return;
-    }
-    if(!lastSummaryText || lastSummaryText.indexOf('No services') !== -1){
-      await recalcRemote();
-    }
-    navigator.clipboard.writeText(lastSummaryText).then(()=>{
-      const btn = document.getElementById('copyBtn');
-      const original = btn.textContent;
-      btn.textContent = 'Copied ✓';
-      setTimeout(()=> btn.textContent = original, 1600);
-    }).catch(()=>{
-      alert(lastSummaryText);
-    });
-  });
-
-  document.getElementById('resetBtn').addEventListener('click', ()=>{
-    document.querySelectorAll('.contact-card input').forEach(i=> i.value = '');
-    document.getElementById('c_state').selectedIndex = 0;
-    sourceSelect.selectedIndex = 0;
-    updateReferralVisibility();
-    cards.forEach(card=>{
-      card.classList.remove('active');
-      card.querySelectorAll('input[type="number"]').forEach(i=> i.value = '');
-      card.querySelectorAll('select').forEach(s=> s.selectedIndex = Array.from(s.options).findIndex(o=>o.defaultSelected) );
-    });
-    document.getElementById('tripfee').value = '0';
-    document.getElementById('rush').value = '0';
-    recalcRemote();
-  });
-
-  updateReferralVisibility();
-
-  document.getElementById('submitBtn').addEventListener('click', async ()=>{
-    if(!contactComplete()){
-      document.getElementById('contactCard').scrollIntoView({behavior:'smooth', block:'start'});
-      document.getElementById('contactCard').style.borderColor = '#D9764F';
-      setTimeout(()=>{ document.getElementById('contactCard').style.borderColor = ''; }, 1400);
-      return;
-    }
-    if(lastActiveCount === 0){
-      const formCol = document.querySelector('.form-col');
-      formCol.scrollIntoView({behavior:'smooth', block:'start'});
-      const btn = document.getElementById('submitBtn');
-      const original = btn.textContent;
-      btn.textContent = 'Select at least one service first';
-      setTimeout(()=> btn.textContent = original, 1800);
-      return;
-    }
-
-    const btn = document.getElementById('submitBtn');
-    const original = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
-
-    const fn = document.getElementById('c_firstName').value.trim();
-    const ln = document.getElementById('c_lastName').value.trim();
-    const email = document.getElementById('c_email').value.trim();
-    const phone = document.getElementById('c_phone').value.trim();
-
-    const contact = {
-      firstName: fn,
-      lastName: ln,
-      address: document.getElementById('c_address').value.trim(),
-      city: document.getElementById('c_city').value.trim(),
-      state: document.getElementById('c_state').value.trim(),
-      zip: document.getElementById('c_zip').value.trim(),
-      phone,
-      email,
-      source: sourceSelect.value,
-      referralName: referralInput.value.trim()
-    };
-
-    try{
-      const resp = await fetch('/api/send-estimate', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({
-          contact,
-          estimate: lastEstimateData
-        })
-      });
-
-      if(!resp.ok){
-        throw new Error('Request failed: ' + resp.status);
       }
 
-      btn.textContent = 'Estimate sent ✓';
-      btn.style.filter = 'brightness(1)';
-      setTimeout(()=> { btn.textContent = original; btn.disabled = false; }, 3000);
+      .section-label {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        margin: 0 0 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--line);
+      }
 
-    } catch(err){
-      console.error('Failed to submit estimate:', err);
-      btn.textContent = 'Couldn\u2019t send — tap to email instead';
-      btn.disabled = false;
-      btn.onclick = ()=>{
-        const subject = `New estimate request — ${fn} ${ln} — ${currency(lastGrandTotal)}`;
-        window.location.href = `mailto:info@raleighpowerwash.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lastSummaryText)}`;
-      };
-    }
-  });
+      /* ---------- Service cards ---------- */
+      .service {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        margin-bottom: 14px;
+        overflow: hidden;
+        transition:
+          border-color 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+      .service.active {
+        border-color: var(--teal);
+        box-shadow: 0 2px 14px rgba(14, 140, 147, 0.08);
+      }
+      .service-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 18px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .toggle {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        border: 2px solid var(--concrete);
+        flex: none;
+        position: relative;
+        transition:
+          background 0.15s ease,
+          border-color 0.15s ease;
+      }
+      .service.active .toggle {
+        background: var(--teal);
+        border-color: var(--teal);
+      }
+      .toggle::after {
+        content: "";
+        position: absolute;
+        left: 6px;
+        top: 2px;
+        width: 6px;
+        height: 11px;
+        border: solid #fff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        opacity: 0;
+      }
+      .service.active .toggle::after {
+        opacity: 1;
+      }
+      .service-title {
+        font-size: 17px;
+        font-weight: 700;
+        flex: 1;
+      }
+      .service-title small {
+        display: block;
+        font-weight: 500;
+        font-size: 12.5px;
+        color: var(--ink-soft);
+        margin-top: 2px;
+      }
+      .service-chip {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        color: var(--teal-dark);
+        background: #e4f4f4;
+        padding: 4px 9px;
+        border-radius: 20px;
+        white-space: nowrap;
+      }
+      .service.active .service-chip {
+        background: var(--teal);
+        color: #fff;
+      }
 
-  recalcRemote();
-})();
-</script>
+      .service-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.25s ease;
+        border-top: 1px solid transparent;
+      }
+      .service.active .service-body {
+        max-height: 520px;
+        border-top: 1px solid var(--line);
+      }
+      .service-body-inner {
+        padding: 16px 18px 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px 16px;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .field.full {
+        grid-column: 1/-1;
+      }
+      .field label {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--ink-soft);
+      }
+      .field input[type="number"],
+      .field select {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 9px 10px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 14px;
+        color: var(--ink);
+        background: #fbfcfd;
+      }
+      .field select {
+        font-family: "Inter", sans-serif;
+      }
+      .field input:focus,
+      .field select:focus {
+        outline: 2px solid var(--teal);
+        outline-offset: 1px;
+      }
+      .line-total {
+        grid-column: 1/-1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 10px;
+        border-top: 1px dashed var(--line);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 13.5px;
+        color: var(--ink-soft);
+      }
+      .line-total b {
+        color: var(--slate);
+        font-size: 15px;
+      }
 
-</body>
+      /* ---------- Global options ---------- */
+      .global-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 18px;
+        margin-bottom: 14px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px 16px;
+      }
+
+      /* ---------- Contact card ---------- */
+      .contact-card {
+        background: var(--panel);
+        border: 1px solid var(--teal);
+        box-shadow: 0 2px 14px rgba(14, 140, 147, 0.08);
+        border-radius: var(--radius);
+        padding: 20px 20px 18px;
+        margin-bottom: 22px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px 16px;
+      }
+      .contact-card .contact-heading {
+        grid-column: 1/-1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2px;
+      }
+      .contact-card .contact-heading h2 {
+        font-family: "Big Shoulders Display", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 20px;
+        letter-spacing: 0.01em;
+        color: var(--slate);
+        margin: 0;
+      }
+      .contact-card .contact-heading .status-pill {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11.5px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        background: #fbebd3;
+        color: var(--gold-dark);
+        white-space: nowrap;
+      }
+      .contact-card .contact-heading .status-pill.done {
+        background: #dcf0ef;
+        color: var(--teal-dark);
+      }
+      .contact-card .field input,
+      .contact-card .field select {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 9px 10px;
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        color: var(--ink);
+        background: #fbfcfd;
+      }
+      .contact-card .field input:invalid:not(:placeholder-shown) {
+        border-color: #d9764f;
+      }
+      .home-sqft-field {
+        background: #eaf6f6;
+        border: 1px solid var(--teal);
+        border-radius: 8px;
+        padding: 12px 14px;
+      }
+      .home-sqft-field label {
+        color: var(--teal-dark);
+      }
+      .field-hint {
+        font-size: 12px;
+        color: var(--ink-soft);
+        margin: 4px 0 0;
+        line-height: 1.4;
+        font-weight: 400;
+      }
+      #referralNameField {
+        display: none;
+      }
+      #referralNameField.show {
+        display: flex;
+      }
+
+      /* ---------- Estimate lock overlay ---------- */
+      .estimate-panel {
+        position: relative;
+      }
+      .estimate-lock {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(18, 40, 63, 0.97),
+          rgba(27, 58, 87, 0.97)
+        );
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 28px;
+        z-index: 5;
+      }
+      .estimate-lock .lock-icon {
+        width: 34px;
+        height: 34px;
+        border: 2px solid var(--gold);
+        border-radius: 8px;
+        margin-bottom: 14px;
+        position: relative;
+      }
+      .estimate-lock .lock-icon::before {
+        content: "";
+        position: absolute;
+        top: -13px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 16px;
+        height: 16px;
+        border: 2px solid var(--gold);
+        border-bottom: none;
+        border-radius: 10px 10px 0 0;
+      }
+      .estimate-lock p {
+        color: #d7e1e7;
+        font-size: 13.5px;
+        line-height: 1.6;
+        margin: 0;
+        max-width: 230px;
+      }
+      .estimate-lock p strong {
+        color: #fff;
+      }
+
+      @media (max-width: 640px) {
+        .service-body-inner {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ---------- Estimate panel ---------- */
+      .estimate-panel {
+        position: sticky;
+        top: 20px;
+        background: var(--slate);
+        color: #fff;
+        border-radius: 14px;
+        padding: 22px 22px 20px;
+        overflow: hidden;
+      }
+      .meter-row {
+        display: flex;
+        gap: 18px;
+        align-items: flex-end;
+        margin-bottom: 18px;
+      }
+      .gauge-wrap {
+        width: 38px;
+        height: 130px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        position: relative;
+        flex: none;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      .gauge-fill {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          180deg,
+          var(--teal) 0%,
+          var(--teal-dark) 100%
+        );
+        border-radius: 20px;
+        height: 4%;
+        transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .gauge-fill::after {
+        content: "";
+        position: absolute;
+        top: -3px;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.35);
+        border-radius: 50%;
+      }
+      .meter-label {
+        flex: 1;
+      }
+      .meter-label .eyebrow-sm {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #8faab8;
+        margin: 0 0 4px;
+      }
+      .total-figure {
+        font-family: "Big Shoulders Display", sans-serif;
+        font-weight: 800;
+        font-size: 44px;
+        line-height: 1;
+        color: #fff;
+      }
+      .total-figure span {
+        font-size: 22px;
+        color: var(--gold);
+      }
+
+      .line-items {
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        padding-top: 14px;
+        margin-bottom: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        max-height: 260px;
+        overflow-y: auto;
+      }
+      .line-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13.5px;
+        color: #d7e1e7;
+      }
+      .line-item b {
+        font-family: "IBM Plex Mono", monospace;
+        color: #fff;
+        font-weight: 600;
+      }
+      .line-item.discount {
+        color: var(--gold);
+      }
+      .line-item.discount b {
+        color: var(--gold);
+      }
+      .empty-note {
+        font-size: 13px;
+        color: #8faab8;
+        padding: 10px 0;
+      }
+
+      .subtotal-block {
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        padding-top: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 13.5px;
+        color: #b9c7cf;
+        margin-bottom: 16px;
+      }
+      .subtotal-block .row {
+        display: flex;
+        justify-content: space-between;
+      }
+      .subtotal-block .row.grand {
+        font-size: 15px;
+        color: #fff;
+        font-weight: 700;
+        padding-top: 6px;
+        border-top: 1px dashed rgba(255, 255, 255, 0.2);
+      }
+
+      .cta-row {
+        display: flex;
+        gap: 10px;
+      }
+      button.cta {
+        flex: 1;
+        border: none;
+        border-radius: 8px;
+        padding: 13px 14px;
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        transition:
+          transform 0.1s ease,
+          filter 0.15s ease;
+      }
+      button.cta:active {
+        transform: translateY(1px);
+      }
+      button.cta.primary {
+        background: var(--gold);
+        color: var(--slate);
+      }
+      button.cta.primary:hover {
+        filter: brightness(1.06);
+      }
+      button.cta.secondary {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+      }
+      button.cta.secondary:hover {
+        background: rgba(255, 255, 255, 0.14);
+      }
+      button.cta.submit-btn {
+        width: 100%;
+        margin-top: 10px;
+        padding: 14px;
+      }
+
+      .min-note {
+        font-size: 11.5px;
+        color: #7f97a3;
+        margin-top: 12px;
+        line-height: 1.5;
+      }
+
+      .estimate-disclaimer {
+        font-size: 12px;
+        color: #d7e1e7;
+        background: rgba(232, 163, 61, 0.12);
+        border: 1px solid rgba(232, 163, 61, 0.35);
+        border-radius: 8px;
+        padding: 10px 12px;
+        line-height: 1.5;
+        margin: 0 0 16px;
+      }
+
+      footer.site {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px 50px;
+        color: var(--ink-soft);
+        font-size: 12.5px;
+        line-height: 1.6;
+      }
+      footer.site strong {
+        color: var(--slate);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .gauge-fill,
+        .service-body {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site">
+      <div class="header-inner">
+        <p class="eyebrow">Raleigh Power Wash · Raleigh / Cary, NC</p>
+        <h1 class="brand display">Instant Job Estimate</h1>
+        <p class="tagline">
+          Build a quote line by line — power washing, windows, and gutters —
+          priced by square and linear footage.
+          <em>Seek the welfare of the city.</em> — Jeremiah 29:7
+        </p>
+      </div>
+    </header>
+
+    <main>
+      <div class="form-col">
+        <div class="contact-card" id="contactCard">
+          <div class="contact-heading">
+            <h2>Your information</h2>
+            <span class="status-pill" id="contactStatus"
+              >Required before pricing</span
+            >
+          </div>
+          <div class="field">
+            <label>First name</label
+            ><input
+              type="text"
+              id="c_firstName"
+              autocomplete="given-name"
+              required
+            />
+          </div>
+          <div class="field">
+            <label>Last name</label
+            ><input
+              type="text"
+              id="c_lastName"
+              autocomplete="family-name"
+              required
+            />
+          </div>
+          <div class="field full">
+            <label>Street address</label
+            ><input
+              type="text"
+              id="c_address"
+              autocomplete="street-address"
+              required
+            />
+          </div>
+          <div class="field full home-sqft-field">
+            <label>Home square footage</label>
+            <input
+              type="number"
+              min="0"
+              step="1"
+              id="c_homeSqft"
+              placeholder="e.g. 2400"
+            />
+            <p class="field-hint">
+              We'll use this to fill in the house, roof, window, and gutter
+              estimates below — you can still adjust any of them individually.
+            </p>
+          </div>
+          <div class="field">
+            <label>City</label
+            ><input
+              type="text"
+              id="c_city"
+              autocomplete="address-level2"
+              required
+            />
+          </div>
+          <div class="field">
+            <label>State</label>
+            <select id="c_state" autocomplete="address-level1" required>
+              <option value="" selected disabled>Select...</option>
+              <option value="NC">North Carolina</option>
+              <option value="SC">South Carolina</option>
+              <option value="VA">Virginia</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>ZIP code</label
+            ><input
+              type="text"
+              id="c_zip"
+              inputmode="numeric"
+              pattern="[0-9]{5}"
+              maxlength="5"
+              autocomplete="postal-code"
+              required
+            />
+          </div>
+          <div class="field">
+            <label>Phone number</label
+            ><input
+              type="tel"
+              id="c_phone"
+              autocomplete="tel"
+              placeholder="(919) 555-0123"
+              required
+            />
+          </div>
+          <div class="field full">
+            <label>Email address</label
+            ><input
+              type="email"
+              id="c_email"
+              autocomplete="email"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+          <div class="field full">
+            <label>How did you hear about us?</label>
+            <select id="c_source" required>
+              <option value="" selected disabled>Select...</option>
+              <option value="Referral">Referral</option>
+              <option value="Google Search">Google search</option>
+              <option value="Google Maps / Business Profile">
+                Google Maps / Business profile
+              </option>
+              <option value="Facebook / Instagram">Facebook / Instagram</option>
+              <option value="Nextdoor">Nextdoor</option>
+              <option value="Yard sign / truck">
+                Saw a yard sign or truck
+              </option>
+              <option value="Repeat customer">I'm a repeat customer</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="field full" id="referralNameField">
+            <label>Who referred you?</label
+            ><input
+              type="text"
+              id="c_referralName"
+              placeholder="Referral's name"
+            />
+          </div>
+        </div>
+
+        <p class="section-label">Power washing</p>
+
+        <div class="service" data-service="siding">
+          <div class="service-head">
+            <div class="toggle"></div>
+            <div class="service-title">
+              House / Siding Wash<small
+                >Soft wash or pressure wash by exterior square footage</small
+              >
+            </div>
+            <div class="service-chip mono">$0.00</div>
+          </div>
+          <div class="service-body">
+            <div class="service-body-inner">
+              <div class="field">
+                <label>Exterior square footage</label
+                ><input
+                  type="number"
+                  min="0"
+                  step="1"
+                  data-field="sqft"
+                  placeholder="e.g. 2400"
+                />
+              </div>
+              <div class="field">
+                <label>Stories</label>
+                <select data-field="stories">
+                  <option value="1">1 story</option>
+                  <option value="2" selected>2 stories</option>
+                  <option value="3">3 stories</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Siding condition</label>
+                <select data-field="condition">
+                  <option value="1">Light — routine upkeep</option>
+                  <option value="1.2" selected>
+                    Moderate — visible grime/mildew
+                  </option>
+                  <option value="1.4">
+                    Heavy — algae, staining, first wash in years
+                  </option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Cleaner type</label>
+                <select data-field="softwash">
+                  <option value="0">Standard wash</option>
+                  <option value="1">
+                    Non-bleach cleaner instead of bleach
+                  </option>
+                </select>
+              </div>
+              <div class="line-total">
+                <span>Line total</span><b class="mono">$0.00</b>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="service" data-service="concrete">
+          <div class="service-head">
+            <div class="toggle"></div>
+            <div class="service-title">
+              Driveway / Walkway / Patio<small
+                >Concrete, pavers, or stamped surfaces by square footage</small
+              >
+            </div>
+            <div class="service-chip mono">$0.00</div>
+          </div>
+          <div class="service-body">
+            <div class="service-body-inner">
+              <div class="field">
+                <label>Total square footage</label
+                ><input
+                  type="number"
+                  min="0"
+                  step="1"
+                  data-field="sqft"
+                  placeholder="e.g. 900"
+                />
+              </div>
+              <div class="field">
+                <label>Surface condition</label>
+                <select data-field="condition">
+                  <option value="1">Light</option>
+                  <option value="1.2" selected>Moderate</option>
+                  <option value="1.4">Heavy staining / rust / oil</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label>Rust or oil stain treatment</label>
+                <select data-field="rust">
+                  <option value="0">Not needed</option>
+                  <option value="1">Add stain treatment</option>
+                </select>
+              </div>
+              <div class="line-total">
+                <span>Line total</span><b class="mono">$0.00</b>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="service" data-service="deck">
+          <div class="service-head">
+            <div class="toggle"></div>
+            <div class="service-title">
+              Deck Wash<small
+                >Priced by square footage, adjusted for material</small
+              >
+            </div>
+            <div class="service-chip mono">$0.00</div>
+          </div>
+          <div class="service-body">
+            <div class="service-body-inner">
+              <div class="field">
+                <label>Deck square footage</label
+                ><input
+                  type="number"
+                  min="0"
+                  step="1"
+                  data-field="sqft"
+                  placeholder="e.g. 300"
+                />
+              </div>
+              <div class="field">
+                <label>Deck material</label>
+                <select data-field="material">
+                  <option value="1.15">Raw wood</option>
+                  <option value="1.20">Stained wood</option>
+                  <option value="1" selected>Painted wood</option>
+                  <option value="1">Trex / composite</option>
+                  <option value="1">Other</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label>Wood brightening / sealant prep</label>
+                <select data-field="brighten">
+                  <option value="0">Not needed</option>
+                  <option value="1">Add brightening treatment</option>
+                </select>
+              </div>
+              <div class="line-total">
+                <span>Line total</span><b class="mono">$0.00</b>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="service" data-service="fence">
+          <div class="service-head">
+            <div class="toggle"></div>
+            <div class="service-title">
+              Fence Wash<small
+                >Priced by linear footage, adjusted for material</small
+              >
+            </div>
+            <div class="service-chip mono">$0.00</div>
+          </div>
+          <div class="service-body">
+            <div class="service-body-inner">
+              <div class="field">
+                <label>Fence linear footage</label
+                ><input
+                  type="number"
+                  min="0"
+                  step="1"
+                  data-field="linft"
+                  placeholder="e.g. 150"
+                />
+              </div>
+              <div class="field">
+                <label>Fence material</label>
+                <select data-field="material">
+                  <option value="0.70">Vinyl</option>
+                  <option value="1.15">Raw wood</option>
+                  <option value="1.20">Stained wood</option>
+                  <option value="1" selected>Painted wood</option>
+                  <option value="1">Other</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label>Wood brightening / sealant prep</label>
+                <select data-field="brighten">
+                  <option value="0">Not needed</option>
+                  <option value="1">Add brightening treatment</option>
+                </select>
+              </div>
+              <div class="line-total">
+                <span>Line total</span><b class="mono">$0.00</b>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="service" data-service="roof">
+          <div class="service-head">
+            <div class="toggle"></div>
+            <div class="service-title">
+              Roof Soft Wash<small
+                >Algae / streak treatment by roof square footage</small
+              >
+            </div>
+            <div class="service-chip mono">$0.00</div>
+          </div>
+          <div class="service-body">
+            <div class="service-body-inner">
+              <div class="field">
+                <label>Roof square footage</label
+                ><input
+                  type="number"
+                  min="0"
+                  step="1"
+                  data-field="sqft"
+                  placeholder="e.g. 1800"
+                />
+              </div>
+              <div class="field">
+                <label>Roof pitch</label>
+                <select data-field="pitch">
+                  <option value="1">Low pitch</option>
+                  <option value="1.25" selected>Medium pitch</option>
+                  <option value="1.5">Steep pitch</option>
+                </select>
+              </div>
+              <div class="line-total">
+                <span>Line total</span><b class="mono">$0.00</b>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="section-label">Windows &amp; gutters</p>
+
+        <div class="service" data-service="windows">
+          <div class="service-head">
+            <div class="toggle"></div>
+            <div class="service-title">
+              Window Cleaning<small
+                >Priced by glass square footage, in/out, plus story
+                access</small
+              >
+            </div>
+            <div class="service-chip mono">$0.00</div>
+          </div>
+          <div class="service-body">
+            <div class="service-body-inner">
+              <div class="field">
+                <label>Window glass square footage</label
+                ><input
+                  type="number"
+                  min="0"
+                  step="1"
+                  data-field="sqft"
+                  placeholder="e.g. 180"
+                />
+              </div>
+              <div class="field">
+                <label>Stories</label>
+                <select data-field="stories">
+                  <option value="1">1 story</option>
+                  <option value="2" selected>2 stories</option>
+                  <option value="3">3 stories</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label>Cleaning scope</label>
+                <select data-field="scope">
+                  <option value="ext">Exterior only</option>
+                  <option value="both" selected>Interior + exterior</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>French pane glass?</label>
+                <select data-field="frenchPane">
+                  <option value="0" selected>No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Storm windows?</label>
+                <select data-field="stormWindows">
+                  <option value="0" selected>No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label>Number of screens to clean</label
+                ><input
+                  type="number"
+                  min="0"
+                  step="1"
+                  data-field="screens"
+                  placeholder="e.g. 12"
+                />
+              </div>
+              <div class="line-total">
+                <span>Line total</span><b class="mono">$0.00</b>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="service" data-service="gutters">
+          <div class="service-head">
+            <div class="toggle"></div>
+            <div class="service-title">
+              Gutter Cleaning<small
+                >Priced by home square footage plus story access</small
+              >
+            </div>
+            <div class="service-chip mono">$0.00</div>
+          </div>
+          <div class="service-body">
+            <div class="service-body-inner">
+              <div class="field">
+                <label>Home square footage</label
+                ><input
+                  type="number"
+                  min="0"
+                  step="1"
+                  data-field="sqft"
+                  placeholder="e.g. 2400"
+                />
+              </div>
+              <div class="field">
+                <label>Stories</label>
+                <select data-field="stories">
+                  <option value="1">1 story</option>
+                  <option value="2" selected>2 stories</option>
+                  <option value="3">3 stories</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Debris load</label>
+                <select data-field="debris">
+                  <option value="1">Light</option>
+                  <option value="1.25" selected>Moderate</option>
+                  <option value="1.6">Heavy — full of buildup</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Downspout flush</label>
+                <select data-field="downspouts">
+                  <option value="0">Not included</option>
+                  <option value="1" selected>Include downspout flush</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label>Gutter guard install</label>
+                <select data-field="guards">
+                  <option value="0">Not needed</option>
+                  <option value="1">Add gutter guard installation</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label>Gutter brightening (clean outside of gutters)</label>
+                <select data-field="brighten">
+                  <option value="0">Not needed</option>
+                  <option value="1">Add gutter brightening</option>
+                </select>
+              </div>
+              <div class="line-total">
+                <span>Line total</span><b class="mono">$0.00</b>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="section-label">Job-wide options</p>
+        <div class="global-card">
+          <div class="field">
+            <label>Trip / travel fee</label>
+            <select id="tripfee">
+              <option value="0" selected>Within standard service area</option>
+              <option value="1">Outside service area</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Rush / weekend scheduling</label>
+            <select id="rush">
+              <option value="0" selected>Standard scheduling</option>
+              <option value="1">Rush / weekend add-on</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <aside class="estimate-panel">
+        <div class="estimate-lock" id="estimateLock">
+          <div class="lock-icon"></div>
+          <p>
+            <strong>Add your contact info</strong> above to unlock your instant
+            estimate.
+          </p>
+        </div>
+        <div class="meter-row">
+          <div class="gauge-wrap">
+            <div class="gauge-fill" id="gaugeFill"></div>
+          </div>
+          <div class="meter-label">
+            <p class="eyebrow-sm">Running total</p>
+            <div class="total-figure mono">
+              <span>$</span><span id="totalFigure">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="line-items" id="lineItems">
+          <p class="empty-note">
+            Select a service on the left to start building the estimate.
+          </p>
+        </div>
+
+        <div class="subtotal-block" id="subtotalBlock" style="display: none">
+          <div class="row">
+            <span>Subtotal</span
+            ><span class="mono" id="rowSubtotal">$0.00</span>
+          </div>
+          <div class="row" id="rowDiscountWrap" style="display: none">
+            <span id="rowDiscountLabel">Bundle discount</span
+            ><span class="mono" id="rowDiscount">–$0.00</span>
+          </div>
+          <div class="row" id="rowTripWrap" style="display: none">
+            <span>Trip fee</span><span class="mono" id="rowTrip">$0.00</span>
+          </div>
+          <div class="row" id="rowRushWrap" style="display: none">
+            <span>Rush / weekend</span
+            ><span class="mono" id="rowRush">$0.00</span>
+          </div>
+          <div class="row grand">
+            <span>Estimate total</span
+            ><span class="mono" id="rowGrand">$0.00</span>
+          </div>
+        </div>
+
+        <p class="estimate-disclaimer">
+          This is only an estimate. Raleigh Power Wash will follow up with you
+          to confirm a final, accurate quote before any work is scheduled.
+        </p>
+
+        <div class="cta-row">
+          <button class="cta secondary" id="resetBtn" type="button">
+            Reset
+          </button>
+          <button class="cta secondary" id="copyBtn" type="button">
+            Copy estimate
+          </button>
+        </div>
+        <button class="cta primary submit-btn" id="submitBtn" type="button">
+          Submit estimate to Raleigh Power Wash
+        </button>
+        <p class="min-note" id="minNote"></p>
+      </aside>
+    </main>
+
+    <footer class="site">
+      <strong>Raleigh Power Wash</strong> — Raleigh &amp; Cary, NC. All figures
+      are instant estimates based on the measurements entered; a final quote may
+      vary after an on-site walkthrough.
+    </footer>
+
+    <script>
+      (function () {
+        const GUARD_MAX = 2200; // gauge fill scale ceiling
+
+        function currency(n) {
+          n = Number(n) || 0;
+          return (
+            "$" +
+            n.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+          );
+        }
+
+        // ---------- Contact info ----------
+        const contactIds = [
+          "c_firstName",
+          "c_lastName",
+          "c_address",
+          "c_city",
+          "c_state",
+          "c_zip",
+          "c_phone",
+          "c_email",
+          "c_source",
+        ];
+        const sourceSelect = document.getElementById("c_source");
+        const referralField = document.getElementById("referralNameField");
+        const referralInput = document.getElementById("c_referralName");
+
+        function updateReferralVisibility() {
+          if (sourceSelect.value === "Referral") {
+            referralField.classList.add("show");
+          } else {
+            referralField.classList.remove("show");
+            referralInput.value = "";
+          }
+        }
+
+        function isValidEmail(v) {
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+        }
+        function isValidPhone(v) {
+          return v.replace(/\D/g, "").length >= 10;
+        }
+        function isValidZip(v) {
+          return /^[0-9]{5}$/.test(v);
+        }
+
+        function contactComplete() {
+          for (const id of contactIds) {
+            const el = document.getElementById(id);
+            if (!el.value || !el.value.trim()) return false;
+          }
+          if (!isValidEmail(document.getElementById("c_email").value))
+            return false;
+          if (!isValidPhone(document.getElementById("c_phone").value))
+            return false;
+          if (!isValidZip(document.getElementById("c_zip").value)) return false;
+          if (sourceSelect.value === "Referral" && !referralInput.value.trim())
+            return false;
+          return true;
+        }
+
+        function updateContactStatus() {
+          const complete = contactComplete();
+          const pill = document.getElementById("contactStatus");
+          const lock = document.getElementById("estimateLock");
+          if (complete) {
+            pill.textContent = "Complete";
+            pill.classList.add("done");
+            lock.style.display = "none";
+          } else {
+            pill.textContent = "Required before pricing";
+            pill.classList.remove("done");
+            lock.style.display = "flex";
+          }
+          return complete;
+        }
+
+        // Contact fields only affect the lock overlay — never trigger a pricing call.
+        document
+          .querySelectorAll(".contact-card input, .contact-card select")
+          .forEach((el) => {
+            el.addEventListener("input", updateContactStatus);
+            el.addEventListener("change", updateContactStatus);
+          });
+        sourceSelect.addEventListener("change", updateReferralVisibility);
+
+        // ---------- Home square footage auto-fill ----------
+        function setSqftField(service, value) {
+          const card = document.querySelector(
+            `.service[data-service="${service}"]`,
+          );
+          if (!card) return;
+          const input = card.querySelector('[data-field="sqft"]');
+          if (input) input.value = value;
+        }
+
+        const homeSqftInput = document.getElementById("c_homeSqft");
+        homeSqftInput.addEventListener("input", () => {
+          const value = homeSqftInput.value;
+          setSqftField("siding", value);
+          setSqftField("windows", value);
+          setSqftField("roof", value);
+          setSqftField("gutters", value);
+          scheduleRecalc();
+        });
+
+        const cards = Array.from(document.querySelectorAll(".service"));
+
+        cards.forEach((card) => {
+          const head = card.querySelector(".service-head");
+          head.addEventListener("click", () => {
+            card.classList.toggle("active");
+            scheduleRecalc();
+          });
+          card.querySelectorAll("input, select").forEach((el) => {
+            el.addEventListener("click", (e) => e.stopPropagation());
+            el.addEventListener("input", scheduleRecalc);
+            el.addEventListener("change", scheduleRecalc);
+          });
+        });
+
+        document
+          .getElementById("tripfee")
+          .addEventListener("change", scheduleRecalc);
+        document
+          .getElementById("rush")
+          .addEventListener("change", scheduleRecalc);
+
+        // ---------- Pricing (calculated server-side — no rates ever live in this page) ----------
+        let lastSummaryText = "";
+        let lastActiveCount = 0;
+        let lastGrandTotal = 0;
+        let lastEstimateData = null;
+        let requestSeq = 0;
+        let recalcTimer = null;
+
+        function scheduleRecalc() {
+          clearTimeout(recalcTimer);
+          recalcTimer = setTimeout(recalcRemote, 300);
+        }
+
+        function buildPayload() {
+          const services = {};
+          cards.forEach((card) => {
+            const service = card.dataset.service;
+            const fields = { active: card.classList.contains("active") };
+            card.querySelectorAll("[data-field]").forEach((el) => {
+              fields[el.dataset.field] = el.value;
+            });
+            services[service] = fields;
+          });
+          return {
+            services,
+            global: {
+              tripfee: document.getElementById("tripfee").value === "1",
+              rush: document.getElementById("rush").value === "1",
+            },
+          };
+        }
+
+        async function recalcRemote() {
+          updateContactStatus();
+          const seq = ++requestSeq;
+          let data;
+          try {
+            const resp = await fetch("/api/estimate", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(buildPayload()),
+            });
+            if (!resp.ok)
+              throw new Error("Estimate request failed: " + resp.status);
+            data = await resp.json();
+          } catch (err) {
+            console.error("Failed to calculate estimate:", err);
+            if (seq === requestSeq) {
+              document.getElementById("minNote").textContent =
+                "Couldn\u2019t reach the pricing service — check your connection and try again.";
+            }
+            return;
+          }
+          if (seq !== requestSeq) return; // a newer request already landed, ignore this stale one
+
+          cards.forEach((card) => {
+            const service = card.dataset.service;
+            const total =
+              (data.serviceTotals && data.serviceTotals[service]) || 0;
+            const chip = card.querySelector(".service-chip");
+            if (chip) chip.textContent = currency(total);
+            const lt = card.querySelector(".line-total b");
+            if (lt) lt.textContent = currency(total);
+          });
+
+          const lineItemsEl = document.getElementById("lineItems");
+          lineItemsEl.innerHTML = "";
+          const lineItems = data.lineItems || [];
+          if (lineItems.length === 0) {
+            lineItemsEl.innerHTML =
+              '<p class="empty-note">Select a service on the left to start building the estimate.</p>';
+          } else {
+            lineItems.forEach((item) => {
+              const row = document.createElement("div");
+              row.className = "line-item";
+              row.innerHTML = `<span>${item.label}</span><b>${currency(item.total)}</b>`;
+              lineItemsEl.appendChild(row);
+            });
+          }
+
+          document.getElementById("rowSubtotal").textContent = currency(
+            data.subtotal,
+          );
+          const discWrap = document.getElementById("rowDiscountWrap");
+          if (data.discountAmt > 0) {
+            discWrap.style.display = "flex";
+            document.getElementById("rowDiscountLabel").textContent =
+              `Bundle discount (${data.discountPct}%)`;
+            document.getElementById("rowDiscount").textContent =
+              "–" + currency(data.discountAmt);
+          } else {
+            discWrap.style.display = "none";
+          }
+
+          const tripWrap = document.getElementById("rowTripWrap");
+          if (data.tripAmt > 0) {
+            tripWrap.style.display = "flex";
+            document.getElementById("rowTrip").textContent = currency(
+              data.tripAmt,
+            );
+          } else {
+            tripWrap.style.display = "none";
+          }
+
+          const rushWrap = document.getElementById("rowRushWrap");
+          if (data.rushAmt > 0) {
+            rushWrap.style.display = "flex";
+            document.getElementById("rowRush").textContent = currency(
+              data.rushAmt,
+            );
+          } else {
+            rushWrap.style.display = "none";
+          }
+
+          document.getElementById("rowGrand").textContent = currency(
+            data.grand,
+          );
+          document.getElementById("subtotalBlock").style.display =
+            data.activeCount > 0 ? "flex" : "none";
+          document.getElementById("totalFigure").textContent = Number(
+            data.grand || 0,
+          ).toLocaleString("en-US", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          });
+
+          const pct = Math.min(
+            100,
+            Math.max(4, (data.grand / GUARD_MAX) * 100),
+          );
+          document.getElementById("gaugeFill").style.height = pct + "%";
+
+          document.getElementById("minNote").textContent = data.minApplied
+            ? `Minimum job charge of ${currency(data.minJob)} applied.`
+            : data.activeCount > 0
+              ? "Totals update live as you edit any field above."
+              : "";
+
+          lastSummaryText = buildSummaryText(data);
+          lastActiveCount = data.activeCount || 0;
+          lastGrandTotal = data.grand || 0;
+          lastEstimateData = data;
+        }
+
+        function buildSummaryText(data) {
+          const out = [];
+          out.push("RALEIGH POWER WASH — INSTANT ESTIMATE");
+          out.push("Raleigh / Cary, NC");
+          out.push("");
+          const fn = document.getElementById("c_firstName").value.trim();
+          const ln = document.getElementById("c_lastName").value.trim();
+          if (fn || ln) {
+            out.push("CUSTOMER");
+            out.push(`${fn} ${ln}`.trim());
+            const addr = document.getElementById("c_address").value.trim();
+            const city = document.getElementById("c_city").value.trim();
+            const state = document.getElementById("c_state").value.trim();
+            const zip = document.getElementById("c_zip").value.trim();
+            if (addr) out.push(addr);
+            const cityLine = [city, [state, zip].filter(Boolean).join(" ")]
+              .filter(Boolean)
+              .join(", ");
+            if (cityLine) out.push(cityLine);
+            const phone = document.getElementById("c_phone").value.trim();
+            const email = document.getElementById("c_email").value.trim();
+            if (phone) out.push("Phone: " + phone);
+            if (email) out.push("Email: " + email);
+            const source = sourceSelect.value;
+            if (source) {
+              let sourceLine = "How they heard about us: " + source;
+              if (source === "Referral" && referralInput.value.trim()) {
+                sourceLine += " (" + referralInput.value.trim() + ")";
+              }
+              out.push(sourceLine);
+            }
+            out.push("");
+          }
+          const lineItems = data.lineItems || [];
+          if (lineItems.length) {
+            lineItems.forEach((item) =>
+              out.push(`• ${item.label}: ${currency(item.total)}`),
+            );
+            out.push("");
+            out.push("Subtotal: " + currency(data.subtotal));
+            if (data.discountAmt > 0)
+              out.push(
+                `Bundle discount (${data.discountPct}%): –${currency(data.discountAmt)}`,
+              );
+            if (data.tripAmt > 0)
+              out.push("Trip fee: " + currency(data.tripAmt));
+            if (data.rushAmt > 0)
+              out.push("Rush / weekend: " + currency(data.rushAmt));
+            if (data.minApplied)
+              out.push(
+                `(Minimum job charge of ${currency(data.minJob)} applied)`,
+              );
+            out.push("");
+            out.push("ESTIMATE TOTAL: " + currency(data.grand));
+          } else {
+            out.push("No services selected yet.");
+          }
+          out.push("");
+          out.push(
+            "This is only an estimate. Raleigh Power Wash will follow up to confirm a final, accurate quote before any work is scheduled.",
+          );
+          return out.join("\n");
+        }
+
+        document
+          .getElementById("copyBtn")
+          .addEventListener("click", async () => {
+            if (!contactComplete()) {
+              document
+                .getElementById("contactCard")
+                .scrollIntoView({ behavior: "smooth", block: "start" });
+              document.getElementById("contactCard").style.borderColor =
+                "#D9764F";
+              setTimeout(() => {
+                document.getElementById("contactCard").style.borderColor = "";
+              }, 1400);
+              return;
+            }
+            if (
+              !lastSummaryText ||
+              lastSummaryText.indexOf("No services") !== -1
+            ) {
+              await recalcRemote();
+            }
+            navigator.clipboard
+              .writeText(lastSummaryText)
+              .then(() => {
+                const btn = document.getElementById("copyBtn");
+                const original = btn.textContent;
+                btn.textContent = "Copied ✓";
+                setTimeout(() => (btn.textContent = original), 1600);
+              })
+              .catch(() => {
+                alert(lastSummaryText);
+              });
+          });
+
+        document.getElementById("resetBtn").addEventListener("click", () => {
+          document
+            .querySelectorAll(".contact-card input")
+            .forEach((i) => (i.value = ""));
+          document.getElementById("c_state").selectedIndex = 0;
+          sourceSelect.selectedIndex = 0;
+          updateReferralVisibility();
+          cards.forEach((card) => {
+            card.classList.remove("active");
+            card
+              .querySelectorAll('input[type="number"]')
+              .forEach((i) => (i.value = ""));
+            card
+              .querySelectorAll("select")
+              .forEach(
+                (s) =>
+                  (s.selectedIndex = Array.from(s.options).findIndex(
+                    (o) => o.defaultSelected,
+                  )),
+              );
+          });
+          document.getElementById("tripfee").value = "0";
+          document.getElementById("rush").value = "0";
+          recalcRemote();
+        });
+
+        updateReferralVisibility();
+
+        document
+          .getElementById("submitBtn")
+          .addEventListener("click", async () => {
+            if (!contactComplete()) {
+              document
+                .getElementById("contactCard")
+                .scrollIntoView({ behavior: "smooth", block: "start" });
+              document.getElementById("contactCard").style.borderColor =
+                "#D9764F";
+              setTimeout(() => {
+                document.getElementById("contactCard").style.borderColor = "";
+              }, 1400);
+              return;
+            }
+            if (lastActiveCount === 0) {
+              const formCol = document.querySelector(".form-col");
+              formCol.scrollIntoView({ behavior: "smooth", block: "start" });
+              const btn = document.getElementById("submitBtn");
+              const original = btn.textContent;
+              btn.textContent = "Select at least one service first";
+              setTimeout(() => (btn.textContent = original), 1800);
+              return;
+            }
+
+            const btn = document.getElementById("submitBtn");
+            const original = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = "Sending…";
+
+            const fn = document.getElementById("c_firstName").value.trim();
+            const ln = document.getElementById("c_lastName").value.trim();
+            const email = document.getElementById("c_email").value.trim();
+            const phone = document.getElementById("c_phone").value.trim();
+
+            const contact = {
+              firstName: fn,
+              lastName: ln,
+              address: document.getElementById("c_address").value.trim(),
+              city: document.getElementById("c_city").value.trim(),
+              state: document.getElementById("c_state").value.trim(),
+              zip: document.getElementById("c_zip").value.trim(),
+              phone,
+              email,
+              source: sourceSelect.value,
+              referralName: referralInput.value.trim(),
+            };
+
+            try {
+              const resp = await fetch("/api/send-estimate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  contact,
+                  estimate: lastEstimateData,
+                }),
+              });
+
+              if (!resp.ok) {
+                throw new Error("Request failed: " + resp.status);
+              }
+
+              btn.textContent = "Estimate sent ✓";
+              btn.style.filter = "brightness(1)";
+              setTimeout(() => {
+                btn.textContent = original;
+                btn.disabled = false;
+              }, 3000);
+            } catch (err) {
+              console.error("Failed to submit estimate:", err);
+              btn.textContent = "Couldn\u2019t send — tap to email instead";
+              btn.disabled = false;
+              btn.onclick = () => {
+                const subject = `New estimate request — ${fn} ${ln} — ${currency(lastGrandTotal)}`;
+                window.location.href = `mailto:info@raleighpowerwash.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lastSummaryText)}`;
+              };
+            }
+          });
+
+        recalcRemote();
+      })();
+    </script>
+  </body>
 </html>
