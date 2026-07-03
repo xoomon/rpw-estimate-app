@@ -371,6 +371,18 @@
       #referralNameField.show {
         display: flex;
       }
+      #deckBrightenField {
+        display: none;
+      }
+      #deckBrightenField.show {
+        display: flex;
+      }
+      #fenceBrightenField {
+        display: none;
+      }
+      #fenceBrightenField.show {
+        display: flex;
+      }
 
       /* ---------- Estimate lock overlay ---------- */
       .estimate-panel {
@@ -823,10 +835,10 @@
                 </select>
               </div>
               <div class="field">
-                <label>Soft-wash treatment</label>
+                <label>Treatment Type</label>
                 <select data-field="softwash">
-                  <option value="0">Standard rinse</option>
-                  <option value="1">Add soft-wash chemical treatment</option>
+                  <option value="0">Standard clean</option>
+                  <option value="1">Use non-bleach chemical option</option>
                 </select>
               </div>
               <div class="line-total">
@@ -912,8 +924,8 @@
                   <option value="other">Other</option>
                 </select>
               </div>
-              <div class="field full">
-                <label>Wood brightening / sealant prep</label>
+              <div class="field full" id="deckBrightenField">
+                <label>Wood brightening</label>
                 <select data-field="brighten">
                   <option value="0">Not needed</option>
                   <option value="1">Add brightening treatment</option>
@@ -951,55 +963,18 @@
               <div class="field">
                 <label>Fence material</label>
                 <select data-field="material">
-                  <option value="vinyl">Vinyl</option>
+                  <option value="vinyl" selected>Vinyl</option>
                   <option value="raw">Raw wood</option>
                   <option value="stained">Stained wood</option>
-                  <option value="painted" selected>Painted wood</option>
+                  <option value="painted">Painted wood</option>
                   <option value="other">Other</option>
                 </select>
               </div>
-              <div class="field full">
+              <div class="field full" id="fenceBrightenField">
                 <label>Wood brightening / sealant prep</label>
                 <select data-field="brighten">
                   <option value="0">Not needed</option>
                   <option value="1">Add brightening treatment</option>
-                </select>
-              </div>
-              <div class="line-total">
-                <span>Line total</span><b class="mono">$0.00</b>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="service" data-service="roof">
-          <div class="service-head">
-            <div class="toggle"></div>
-            <div class="service-title">
-              Roof Soft Wash<small
-                >Algae / streak treatment by roof square footage</small
-              >
-            </div>
-            <div class="service-chip mono">$0.00</div>
-          </div>
-          <div class="service-body">
-            <div class="service-body-inner">
-              <div class="field">
-                <label>Roof square footage</label
-                ><input
-                  type="number"
-                  min="0"
-                  step="1"
-                  data-field="sqft"
-                  placeholder="e.g. 1800"
-                />
-              </div>
-              <div class="field">
-                <label>Roof pitch</label>
-                <select data-field="pitch">
-                  <option value="low">Low pitch</option>
-                  <option value="medium" selected>Medium pitch</option>
-                  <option value="steep">Steep pitch</option>
                 </select>
               </div>
               <div class="line-total">
@@ -1121,8 +1096,8 @@
               <div class="field">
                 <label>Downspout flush</label>
                 <select data-field="downspouts">
-                  <option value="0">Not included</option>
-                  <option value="1" selected>Include downspout flush</option>
+                  <option value="0" selected>Not included</option>
+                  <option value="1">Include downspout flush</option>
                 </select>
               </div>
               <div class="field full">
@@ -1137,6 +1112,43 @@
                 <select data-field="brighten">
                   <option value="0">Not needed</option>
                   <option value="1">Add gutter brightening</option>
+                </select>
+              </div>
+              <div class="line-total">
+                <span>Line total</span><b class="mono">$0.00</b>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="service" data-service="roof">
+          <div class="service-head">
+            <div class="toggle"></div>
+            <div class="service-title">
+              Roof Soft Wash<small
+                >Algae / streak treatment by roof square footage</small
+              >
+            </div>
+            <div class="service-chip mono">$0.00</div>
+          </div>
+          <div class="service-body">
+            <div class="service-body-inner">
+              <div class="field">
+                <label>Roof square footage</label
+                ><input
+                  type="number"
+                  min="0"
+                  step="1"
+                  data-field="sqft"
+                  placeholder="e.g. 1800"
+                />
+              </div>
+              <div class="field">
+                <label>Roof pitch</label>
+                <select data-field="pitch">
+                  <option value="low">Low pitch</option>
+                  <option value="medium" selected>Medium pitch</option>
+                  <option value="steep">Steep pitch</option>
                 </select>
               </div>
               <div class="line-total">
@@ -1328,6 +1340,43 @@
             el.addEventListener("change", updateContactStatus);
           });
         sourceSelect.addEventListener("change", updateReferralVisibility);
+
+        // ---------- Deck: only show brightening for raw/stained wood ----------
+        const deckCard = document.querySelector(
+          '.service[data-service="deck"]',
+        );
+        const deckMaterialSelect = deckCard.querySelector(
+          '[data-field="material"]',
+        );
+        const deckBrightenField = document.getElementById("deckBrightenField");
+        function updateDeckBrightenVisibility() {
+          const show = ["raw", "stained"].includes(deckMaterialSelect.value);
+          deckBrightenField.classList.toggle("show", show);
+        }
+        deckMaterialSelect.addEventListener(
+          "change",
+          updateDeckBrightenVisibility,
+        );
+        updateDeckBrightenVisibility();
+
+        // ---------- Fence: only show brightening for raw/stained wood ----------
+        const fenceCard = document.querySelector(
+          '.service[data-service="fence"]',
+        );
+        const fenceMaterialSelect = fenceCard.querySelector(
+          '[data-field="material"]',
+        );
+        const fenceBrightenField =
+          document.getElementById("fenceBrightenField");
+        function updateFenceBrightenVisibility() {
+          const show = ["raw", "stained"].includes(fenceMaterialSelect.value);
+          fenceBrightenField.classList.toggle("show", show);
+        }
+        fenceMaterialSelect.addEventListener(
+          "change",
+          updateFenceBrightenVisibility,
+        );
+        updateFenceBrightenVisibility();
 
         // ---------- Home square footage auto-fill ----------
         function setSqftField(service, value) {
