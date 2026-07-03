@@ -37,7 +37,10 @@ module.exports = async (req, res) => {
       from:
         process.env.FROM_EMAIL ||
         "Raleigh Power Wash Estimates <estimates@raleighpowerwash.com>",
-      to: process.env.TO_EMAIL || "info@raleighpowerwash.com",
+      to: (process.env.TO_EMAIL || "info@raleighpowerwash.com")
+        .split(",")
+        .map((e) => e.trim())
+        .filter(Boolean),
       reply_to: contact.email,
       subject,
       text: buildTextEmail(contact, estimate),
